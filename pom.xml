@@ -153,4 +153,17 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>javabin.nexus</id>
+            <name>RepositoryProxy</name>
+            <url>http://nye.java.no/nexus/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>javabin.nexus</id>
+            <name>RepositoryProxy</name>
+            <url>http://nye.java.no/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 </project>
