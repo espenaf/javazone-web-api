@@ -1,6 +1,7 @@
 package no.javazone.api.foredrag;
 
 import no.javazone.ems.EmsAdapter;
+import no.javazone.ems.Foredragsholder;
 import no.javazone.ems.Session;
 
 import javax.ws.rs.GET;
@@ -27,7 +28,11 @@ public class SessionResource {
     public Response getForedrag(@PathParam("eventId") String eventId) {
         List<Session> sessions = emsAdapter.getSessions(eventId);
 
-        List<SessionDTO> response = new ArrayList<>();
+        List<SessionDTO> response = sessions
+                .stream()
+                .map(foredrag -> new SessionDTO(foredrag.getTittel(), toDTO(foredrag.getForedragsholdere())))
+                .collect(Collectors.toList());
+
 
         for (Session session : sessions) {
             List<ForedragsholderDTO> foredragsholdere = session.getForedragsholdere()
@@ -39,5 +44,13 @@ public class SessionResource {
         }
 
         return Response.ok().entity(response).build();
+    }
+
+    private List<ForedragsholderDTO> toDTO(List<Foredragsholder> foredragsholdere) {
+        return foredragsholdere
+                .stream()
+                .map(foredragsholder -> new ForedragsholderDTO(
+                        foredragsholder.getNavn(), foredragsholder.getGravatarUrl()))
+                .collect(Collectors.toList());
     }
 }
