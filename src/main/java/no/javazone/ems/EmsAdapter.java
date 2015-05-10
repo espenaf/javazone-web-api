@@ -2,6 +2,7 @@ package no.javazone.ems;
 
 import net.hamnaberg.json.Collection;
 import net.hamnaberg.json.Item;
+import net.hamnaberg.json.Link;
 import net.hamnaberg.json.parser.CollectionParser;
 
 import javax.ws.rs.client.Client;
@@ -45,7 +46,36 @@ public class EmsAdapter {
     }
 
     private static Session mapItemTilForedrag(Item item) {
-        return new Session(mapItemProperty(item, "title"), new ArrayList<>());
+        return new Session(
+                mapItemProperty(item, "title"),
+                getForedragsholdere(item.linkByRel("speaker collection")));
+    }
+
+    private static List<Foredragsholder> getForedragsholdere(Optional<Link> link) {
+        if (link.isPresent()) {
+            WebTarget webTarget = ClientBuilder.newClient()
+                    .target(link.get().getHref());
+            String response = webTarget.request().buildGet().invoke(String.class);
+
+            try {
+                Collection collection = new CollectionParser().parse(response);
+                return collection
+                        .getItems()
+                        .stream()
+                        .map(EmsAdapter::mapItemTilForedragsholder)
+                        .collect(Collectors.toList());
+            } catch (IOException e) {
+                throw new RuntimeException("Finner ikke speakers");
+            }
+        } else {
+            throw new RuntimeException("Speakerlink finnes ikke");
+        }
+    }
+
+    private static Foredragsholder mapItemTilForedragsholder(Item item) {
+        return new Foredragsholder(
+                mapItemProperty(item, "name"),
+                mapItemProperty(item, "bio"));
     }
 
     private static String mapItemProperty(Item item, String property) {
