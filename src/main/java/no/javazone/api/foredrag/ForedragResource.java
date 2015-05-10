@@ -9,8 +9,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/event/{eventId}/foredrag")
 @Produces(MediaType.APPLICATION_JSON)
@@ -26,11 +26,10 @@ public class ForedragResource {
     public Response getForedrag(@PathParam("eventId") String eventId) {
         List<Foredrag> foredragsliste = emsAdapter.getForedragsliste(eventId);
 
-        List<ForedragDTO> response = new ArrayList<>();
-
-        for (Foredrag foredrag : foredragsliste) {
-            response.add(new ForedragDTO(foredrag.getTittel()));
-        }
+        List<ForedragDTO> response = foredragsliste
+                .stream()
+                .map(foredrag -> new ForedragDTO(foredrag.getTittel()))
+                .collect(Collectors.toList());
 
         return Response.ok().entity(response).build();
     }

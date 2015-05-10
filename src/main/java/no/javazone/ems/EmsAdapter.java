@@ -9,6 +9,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class EmsAdapter {
     private String emsHost;
@@ -19,8 +20,11 @@ public class EmsAdapter {
 
     public List<Foredrag> getForedragsliste(String eventId) {
         Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target("http://" + emsHost)
-                .path("/ems/server/events/" + eventId + "/sessions");
+        WebTarget webTarget = client
+                .target("http://" + emsHost)
+                .path("/ems/server/events")
+                .path(eventId)
+                .path("sessions");
 
         String response = webTarget.request().buildGet().invoke(String.class);
 
@@ -34,18 +38,18 @@ public class EmsAdapter {
     }
 
     private List<Foredrag> mapToForedragsliste(Collection collection) throws IOException {
-        ArrayList<Foredrag> foredrags = new ArrayList<>();
-
-        for (Item item : collection.getItems()) {
-            Foredrag foredrag = new Foredrag(
-                    mapItemProperty(item, "title"));
-            foredrags.add(foredrag);
-        }
-
-        return foredrags;
+        return collection
+                .getItems()
+                .stream()
+                .map(EmsAdapter::mapItemTilForedrag)
+                .collect(Collectors.toList());
     }
 
-    private String mapItemProperty(Item item, String property) {
+    private static Foredrag mapItemTilForedrag(Item item) {
+        return new Foredrag(mapItemProperty(item, "title"));
+    }
+
+    private static String mapItemProperty(Item item, String property) {
         return item.propertyByName(property).get().getValue().get().asString();
     }
 }
