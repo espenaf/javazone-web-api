@@ -5,3 +5,5 @@ server:
   adminConnectors:
   - type: http
     port: 9003
+
+emsHost: test.javazone.no

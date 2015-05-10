@@ -33,7 +33,7 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
         final HelloWorldResource resource = new HelloWorldResource();
         environment.jersey().register(resource);
 
-        final EmsAdapter emsAdapter = new EmsAdapter("test.javazone.no");
+        final EmsAdapter emsAdapter = new EmsAdapter(configuration.getEmsHost());
         final ForedragResource foredragResource = new ForedragResource(emsAdapter);
         environment.jersey().register(foredragResource);
     }
