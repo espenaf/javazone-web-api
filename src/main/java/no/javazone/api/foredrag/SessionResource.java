@@ -33,16 +33,6 @@ public class SessionResource {
                 .map(foredrag -> new SessionDTO(foredrag.getTittel(), toDTO(foredrag.getForedragsholdere())))
                 .collect(Collectors.toList());
 
-
-        for (Session session : sessions) {
-            List<ForedragsholderDTO> foredragsholdere = session.getForedragsholdere()
-                    .stream()
-                    .map(foredragsholder -> new ForedragsholderDTO(
-                            foredragsholder.getNavn(), foredragsholder.getGravatarUrl()))
-                    .collect(Collectors.toList());
-            response.add(new SessionDTO(session.getTittel(), foredragsholdere));
-        }
-
         return Response.ok().entity(response).build();
     }
 
