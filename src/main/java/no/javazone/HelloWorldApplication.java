@@ -4,7 +4,7 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import no.javazone.ems.EmsAdapter;
-import no.javazone.api.foredrag.ForedragResource;
+import no.javazone.api.foredrag.SessionResource;
 
 public class HelloWorldApplication extends Application<HelloWorldConfiguration> {
 
@@ -34,8 +34,8 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
         environment.jersey().register(resource);
 
         final EmsAdapter emsAdapter = new EmsAdapter(configuration.getEmsHost());
-        final ForedragResource foredragResource = new ForedragResource(emsAdapter);
-        environment.jersey().register(foredragResource);
+        final SessionResource sessionResource = new SessionResource(emsAdapter);
+        environment.jersey().register(sessionResource);
     }
 
 }

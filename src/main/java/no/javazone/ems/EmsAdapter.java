@@ -8,18 +8,20 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import java.io.IOException;
+import java.net.URI;
 import java.util.*;
 
 public class EmsAdapter {
-    private String emsHost;
+    private final WebTarget emsWebTarget;
 
     public EmsAdapter(String emsHost) {
-        this.emsHost = emsHost;
+        Client client = ClientBuilder.newClient();
+        emsWebTarget = client.target("http://" + emsHost);
     }
 
-    public List<Foredrag> getForedragsliste(String eventId) {
-        Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target("http://" + emsHost)
+    public List<Session> getSessions(String eventId) {
+
+        WebTarget webTarget = emsWebTarget
                 .path("/ems/server/events/" + eventId + "/sessions");
 
         String response = webTarget.request().buildGet().invoke(String.class);
@@ -33,16 +35,22 @@ public class EmsAdapter {
         }
     }
 
-    private List<Foredrag> mapToForedragsliste(Collection collection) throws IOException {
-        ArrayList<Foredrag> foredrags = new ArrayList<>();
+    private List<Session> mapToForedragsliste(Collection collection) throws IOException {
+        ArrayList<Session> sessions = new ArrayList<>();
 
         for (Item item : collection.getItems()) {
-            Foredrag foredrag = new Foredrag(
-                    mapItemProperty(item, "title"));
-            foredrags.add(foredrag);
+            Session session = new Session(
+                    mapItemProperty(item, "title"),
+                    new ArrayList<>());
+                    //getForedragsholdere(item.linkByName("Speakers").get().getHref()));
+            sessions.add(session);
         }
 
-        return foredrags;
+        return sessions;
+    }
+
+    private List<Foredragsholder> getForedragsholdere(URI speakersUri) {
+        return null;
     }
 
     private String mapItemProperty(Item item, String property) {
