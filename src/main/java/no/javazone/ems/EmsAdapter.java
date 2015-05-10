@@ -8,8 +8,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class EmsAdapter {
     private String emsHost;
@@ -18,30 +17,35 @@ public class EmsAdapter {
         this.emsHost = emsHost;
     }
 
-    public Optional<Session> getSession(String sessionId) {
+    public List<Foredrag> getForedragsliste(String eventId) {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target("http://" + emsHost)
-                .path("/ems/server/events/" + sessionId + "/sessions");
+                .path("/ems/server/events/" + eventId + "/sessions");
 
         String response = webTarget.request().buildGet().invoke(String.class);
 
         try {
-            Session session = mapToSession(response);
-            return Optional.of(session);
+            Collection collection = new CollectionParser().parse(response);
+            return mapToForedragsliste(collection);
 
         } catch (IOException e) {
-            return Optional.empty();
+            return Collections.emptyList();
         }
     }
 
-    private Session mapToSession(String response) throws IOException {
-        Collection collection = new CollectionParser().parse(response);
-        List<Item> items = collection.getItems();
+    private List<Foredrag> mapToForedragsliste(Collection collection) throws IOException {
+        ArrayList<Foredrag> foredrags = new ArrayList<>();
 
-        for (Item item : items) {
-            System.out.println(item.getData().toString());
+        for (Item item : collection.getItems()) {
+            Foredrag foredrag = new Foredrag(
+                    mapItemProperty(item, "title"));
+            foredrags.add(foredrag);
         }
 
-        return new Session();
+        return foredrags;
+    }
+
+    private String mapItemProperty(Item item, String property) {
+        return item.propertyByName(property).get().getValue().get().asString();
     }
 }

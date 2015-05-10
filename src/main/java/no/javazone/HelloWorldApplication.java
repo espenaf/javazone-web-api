@@ -3,6 +3,8 @@ package no.javazone;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import no.javazone.ems.EmsAdapter;
+import no.javazone.api.foredrag.ForedragResource;
 
 public class HelloWorldApplication extends Application<HelloWorldConfiguration> {
 
@@ -30,6 +32,10 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
     ) {
         final HelloWorldResource resource = new HelloWorldResource();
         environment.jersey().register(resource);
+
+        final EmsAdapter emsAdapter = new EmsAdapter("test.javazone.no");
+        final ForedragResource foredragResource = new ForedragResource(emsAdapter);
+        environment.jersey().register(foredragResource);
     }
 
 }
