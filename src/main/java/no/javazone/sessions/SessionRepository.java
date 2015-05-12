@@ -10,24 +10,20 @@ import java.util.Map;
 
 public class SessionRepository {
     private EmsAdapter emsAdapter;
-    private Map<String, List<Session>> eventCache;
+    private Map<String, Event> eventCache;
 
     public SessionRepository(EmsAdapter emsAdapter) {
         this.emsAdapter = emsAdapter;
         eventCache = new HashMap<>();
     }
 
-    public List<Session> getSessions(String eventId) {
-        return eventCache.get(eventId);
+    public Event getSessions(String eventSlug) {
+        return eventCache.get(eventSlug);
     }
 
     public void refresh() {
-        List<Event> events = emsAdapter.getEvents();
-
-        System.out.println(events.size());
-//        for (String cachedEvent : cachedEvents) {
-//            List<Session> sessions = emsAdapter.getEvent(cachedEvent);
-//            eventCache.put(cachedEvent, sessions);
-//        }
+        emsAdapter
+                .getEvents()
+                .forEach(event -> eventCache.put(event.getSlug(), event));
     }
 }

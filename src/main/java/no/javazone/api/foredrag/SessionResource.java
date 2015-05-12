@@ -1,6 +1,5 @@
 package no.javazone.api.foredrag;
 
-import no.javazone.ems.EmsAdapter;
 import no.javazone.ems.Foredragsholder;
 import no.javazone.ems.Session;
 import no.javazone.sessions.SessionRepository;
@@ -11,7 +10,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,8 +24,8 @@ public class SessionResource {
     }
 
     @GET
-    public Response getForedrag(@PathParam("eventId") String eventId) {
-        List<Session> sessions = sessionRepository.getSessions(eventId);
+    public Response getForedrag(@PathParam("eventId") String eventSlug) {
+        List<Session> sessions = sessionRepository.getSessions(eventSlug).getSessions();
 
         List<SessionDTO> response = sessions
                 .stream()

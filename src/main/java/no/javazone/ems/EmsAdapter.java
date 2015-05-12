@@ -45,7 +45,6 @@ public class EmsAdapter {
     }
 
     public Optional<Event> getEvent(EventMinimal eventMinimal) {
-        System.out.println("Event " + eventMinimal.getSlug() + " " + eventMinimal.getUri());
         WebTarget sessionWebTarget = ClientBuilder
                 .newClient()
                 .target(eventMinimal.getUri())

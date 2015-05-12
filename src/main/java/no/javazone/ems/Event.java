@@ -17,4 +17,8 @@ public class Event {
     public List<Session> getSessions() {
         return sessions;
     }
+
+    public String getSlug() {
+        return slug;
+    }
 }
