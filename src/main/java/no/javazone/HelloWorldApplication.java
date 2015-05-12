@@ -5,6 +5,7 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import no.javazone.ems.EmsAdapter;
 import no.javazone.api.foredrag.SessionResource;
+import no.javazone.sessions.SessionRepository;
 
 public class HelloWorldApplication extends Application<HelloWorldConfiguration> {
 
@@ -34,7 +35,12 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
         environment.jersey().register(resource);
 
         final EmsAdapter emsAdapter = new EmsAdapter(configuration.getEmsHost());
-        final SessionResource sessionResource = new SessionResource(emsAdapter);
+
+        final SessionRepository sessionRepository = new SessionRepository(emsAdapter);
+
+        sessionRepository.refresh();
+
+        final SessionResource sessionResource = new SessionResource(sessionRepository);
         environment.jersey().register(sessionResource);
     }
 

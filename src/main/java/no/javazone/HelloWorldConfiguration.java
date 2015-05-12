@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import java.util.List;
+
 public class HelloWorldConfiguration extends Configuration {
     @NotEmpty
     private String emsHost;

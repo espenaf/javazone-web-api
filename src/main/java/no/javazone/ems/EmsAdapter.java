@@ -9,6 +9,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import java.io.IOException;
+import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -20,29 +21,68 @@ public class EmsAdapter {
         emsWebTarget = client.target("http://" + emsHost);
     }
 
-    public List<Session> getSessions(String eventId) {
-        WebTarget webTarget = emsWebTarget
-                .path("/ems/server/events")
-                .path(eventId)
-                .path("sessions");
+    public List<Event> getEvents() {
+        return getEventUris()
+                .stream()
+                .map(this::getEvent)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+    }
 
-        String response = webTarget.request().buildGet().invoke(String.class);
+    public List<EventMinimal> getEventUris() {
+        WebTarget eventWebTarget = emsWebTarget.path("/ems/server/events");
+
+        String response = eventWebTarget.request().buildGet().invoke(String.class);
 
         try {
             Collection collection = new CollectionParser().parse(response);
-            return mapToForedragsliste(collection);
+            return mapToEventMinimals(collection);
 
         } catch (IOException e) {
             return Collections.emptyList();
         }
     }
 
-    private List<Session> mapToForedragsliste(Collection collection) throws IOException {
+    public Optional<Event> getEvent(EventMinimal eventMinimal) {
+        System.out.println("Event " + eventMinimal.getSlug() + " " + eventMinimal.getUri());
+        WebTarget sessionWebTarget = ClientBuilder
+                .newClient()
+                .target(eventMinimal.getUri())
+                .path("sessions");
+
+        String response = sessionWebTarget.request().buildGet().invoke(String.class);
+
+        try {
+            Collection collection = new CollectionParser().parse(response);
+            return Optional.of(mapToEvent(collection, eventMinimal.getSlug()));
+
+        } catch (IOException e) {
+            return Optional.empty();
+        }
+    }
+
+    private List<EventMinimal> mapToEventMinimals(Collection collection) {
         return collection
+                .getItems()
+                .stream()
+                .map(this::mapItemToEventMinimal)
+                .collect(Collectors.toList());
+    }
+
+    private EventMinimal mapItemToEventMinimal(Item item) {
+        return new EventMinimal(
+                item.getHref().get(),
+                mapItemProperty(item, "slug"));
+    }
+
+    private Event mapToEvent(Collection collection, String slug) throws IOException {
+        List<Session> sessions = collection
                 .getItems()
                 .stream()
                 .map(EmsAdapter::mapItemTilForedrag)
                 .collect(Collectors.toList());
+        return new Event(sessions, slug);
     }
 
     private static Session mapItemTilForedrag(Item item) {
