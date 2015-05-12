@@ -7,6 +7,10 @@ import no.javazone.ems.EmsAdapter;
 import no.javazone.api.foredrag.SessionResource;
 import no.javazone.sessions.SessionRepository;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 public class HelloWorldApplication extends Application<HelloWorldConfiguration> {
 
     public static void main(String[] args) throws Exception {
@@ -38,7 +42,9 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
 
         final SessionRepository sessionRepository = new SessionRepository(emsAdapter);
 
-        sessionRepository.refresh();
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+            sessionRepository.refresh();
+        }, 0, 10, TimeUnit.MINUTES);
 
         final SessionResource sessionResource = new SessionResource(sessionRepository);
         environment.jersey().register(sessionResource);

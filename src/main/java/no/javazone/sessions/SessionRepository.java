@@ -2,11 +2,10 @@ package no.javazone.sessions;
 
 import no.javazone.ems.EmsAdapter;
 import no.javazone.ems.Event;
-import no.javazone.ems.Session;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class SessionRepository {
     private EmsAdapter emsAdapter;
@@ -17,11 +16,16 @@ public class SessionRepository {
         eventCache = new HashMap<>();
     }
 
-    public Event getSessions(String eventSlug) {
-        return eventCache.get(eventSlug);
+    public Optional<Event> getSessions(String eventSlug) {
+        if (eventCache.containsKey(eventSlug)) {
+            return Optional.of(eventCache.get(eventSlug));
+        } else {
+            return Optional.empty();
+        }
     }
 
     public void refresh() {
+        System.out.println("Refreshing");
         emsAdapter
                 .getEvents()
                 .forEach(event -> eventCache.put(event.getSlug(), event));
