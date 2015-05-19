@@ -25,9 +25,13 @@ public class SessionRepository {
     }
 
     public void refresh() {
-        System.out.println("Refreshing");
+        System.out.println("Caching starta");
         emsAdapter
                 .getEvents()
-                .forEach(event -> eventCache.put(event.getSlug(), event));
+                .forEach(event -> {
+                    System.out.println("Cached " + event.getSlug());
+                    eventCache.put(event.getSlug(), event);
+                });
+        System.out.println("Caching ferdig");
     }
 }

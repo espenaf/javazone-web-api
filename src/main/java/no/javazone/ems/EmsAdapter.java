@@ -9,9 +9,11 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import java.io.IOException;
-import java.net.URI;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class EmsAdapter {
     private final WebTarget emsWebTarget;
@@ -21,16 +23,15 @@ public class EmsAdapter {
         emsWebTarget = client.target("http://" + emsHost);
     }
 
-    public List<Event> getEvents() {
+    public Stream<Event> getEvents() {
         return getEventUris()
-                .stream()
+                .parallelStream()
                 .map(this::getEvent)
                 .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
+                .map(Optional::get);
     }
 
-    public List<EventMinimal> getEventUris() {
+    private List<EventMinimal> getEventUris() {
         WebTarget eventWebTarget = emsWebTarget.path("/ems/server/events");
 
         String response = eventWebTarget.request().buildGet().invoke(String.class);
@@ -44,7 +45,7 @@ public class EmsAdapter {
         }
     }
 
-    public Optional<Event> getEvent(EventMinimal eventMinimal) {
+    private Optional<Event> getEvent(EventMinimal eventMinimal) {
         WebTarget sessionWebTarget = ClientBuilder
                 .newClient()
                 .target(eventMinimal.getUri())
