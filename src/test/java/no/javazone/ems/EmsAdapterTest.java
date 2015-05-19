@@ -2,10 +2,16 @@ package no.javazone.ems;
 
 import org.junit.Test;
 
+import java.util.List;
+
+import static org.fest.assertions.Assertions.assertThat;
+
 public class EmsAdapterTest {
     @Test
     public void should_get_sessions() {
         EmsAdapter emsAdapter = new EmsAdapter("test.javazone.no");
-        emsAdapter.getEvents();
+        List<Event> events = emsAdapter.getEvents();
+
+        assertThat(events.size()).isGreaterThan(0);
     }
 }
