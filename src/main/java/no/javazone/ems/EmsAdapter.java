@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class EmsAdapter {
+
     private final WebTarget emsWebTarget;
 
     public EmsAdapter(String emsHost) {
@@ -29,6 +30,11 @@ public class EmsAdapter {
                 .map(this::getEvent)
                 .filter(Optional::isPresent)
                 .map(Optional::get);
+    }
+
+    public void check() {
+        WebTarget target = emsWebTarget.path("/ems/server/app-info");
+        target.request().buildGet().invoke(String.class);
     }
 
     private List<EventMinimal> getEventUris() {
