@@ -46,6 +46,8 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
 
         final SessionResource sessionResource = new SessionResource(sessionRepository);
         environment.jersey().register(sessionResource);
+
+        environment.healthChecks().register("ems", new EmsHealthCheck(emsAdapter));
     }
 
 }
