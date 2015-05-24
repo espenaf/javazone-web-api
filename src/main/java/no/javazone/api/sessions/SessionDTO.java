@@ -1,4 +1,4 @@
-package no.javazone.api.foredrag;
+package no.javazone.api.sessions;
 
 import java.util.List;
 

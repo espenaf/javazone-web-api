@@ -3,8 +3,9 @@ package no.javazone;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import no.javazone.api.foredrag.SessionResource;
+import no.javazone.api.sessions.SessionResource;
 import no.javazone.ems.EmsAdapter;
+import no.javazone.helsesjekk.EmsHealthCheck;
 import no.javazone.sessions.SessionRepository;
 
 import java.util.concurrent.Executors;
@@ -41,8 +42,7 @@ public class JavaZoneWebApiApplication extends Application<JavaZoneWebApiConfigu
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(
                 () -> sessionRepository.refresh(), 0, 10, TimeUnit.MINUTES);
 
-        final SessionResource sessionResource = new SessionResource(sessionRepository);
-        environment.jersey().register(sessionResource);
+        environment.jersey().register(new SessionResource(sessionRepository));
 
         environment.healthChecks().register("ems", new EmsHealthCheck(emsAdapter));
     }

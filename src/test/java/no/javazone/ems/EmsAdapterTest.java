@@ -1,5 +1,6 @@
 package no.javazone.ems;
 
+import no.javazone.sessions.Event;
 import org.junit.Test;
 
 import java.util.List;

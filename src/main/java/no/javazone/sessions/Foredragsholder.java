@@ -1,4 +1,4 @@
-package no.javazone.ems;
+package no.javazone.sessions;
 
 public class Foredragsholder {
     private final String navn;

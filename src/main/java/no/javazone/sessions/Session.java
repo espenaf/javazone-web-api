@@ -1,4 +1,4 @@
-package no.javazone.ems;
+package no.javazone.sessions;
 
 import java.util.List;
 

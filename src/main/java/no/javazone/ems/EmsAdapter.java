@@ -4,6 +4,9 @@ import net.hamnaberg.json.Collection;
 import net.hamnaberg.json.Item;
 import net.hamnaberg.json.Link;
 import net.hamnaberg.json.parser.CollectionParser;
+import no.javazone.sessions.Event;
+import no.javazone.sessions.Foredragsholder;
+import no.javazone.sessions.Session;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;

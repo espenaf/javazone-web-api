@@ -1,8 +1,7 @@
-package no.javazone.api.foredrag;
+package no.javazone.api.sessions;
 
-import no.javazone.ems.Event;
-import no.javazone.ems.Foredragsholder;
-import no.javazone.ems.Session;
+import no.javazone.sessions.Event;
+import no.javazone.sessions.Foredragsholder;
 import no.javazone.sessions.SessionRepository;
 
 import javax.ws.rs.GET;
@@ -29,27 +28,30 @@ public class SessionResource {
     public Response getForedrag(@PathParam("eventId") String eventSlug) {
         Optional<Event> eventOptional = sessionRepository.getSessions(eventSlug);
         if (eventOptional.isPresent()) {
-            System.out.println("is present");
-            List<SessionDTO> response = eventOptional.get()
-                    .getSessions()
-                    .stream()
-                    .map(foredrag -> new SessionDTO(
-                            foredrag.getTittel(),
-                            toDTO(foredrag.getForedragsholdere())))
-                    .collect(Collectors.toList());
+            List<SessionDTO> response = toSessionDTOs(eventOptional.get());
             return Response.ok().entity(response).build();
 
         } else {
-            System.out.println("nope");
             return Response.status(503).build();
         }
     }
 
-    private List<ForedragsholderDTO> toDTO(List<Foredragsholder> foredragsholdere) {
+    private List<SessionDTO> toSessionDTOs(Event event) {
+        return event
+                .getSessions()
+                .stream()
+                .map(foredrag -> new SessionDTO(
+                        foredrag.getTittel(),
+                        toForedragsholderDTO(foredrag.getForedragsholdere())))
+                .collect(Collectors.toList());
+    }
+
+    private List<ForedragsholderDTO> toForedragsholderDTO(List<Foredragsholder> foredragsholdere) {
         return foredragsholdere
                 .stream()
                 .map(foredragsholder -> new ForedragsholderDTO(
-                        foredragsholder.getNavn(), foredragsholder.getGravatarUrl()))
+                        foredragsholder.getNavn(),
+                        foredragsholder.getGravatarUrl()))
                 .collect(Collectors.toList());
     }
 }

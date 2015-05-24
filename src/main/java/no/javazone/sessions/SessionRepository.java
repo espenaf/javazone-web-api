@@ -1,7 +1,6 @@
 package no.javazone.sessions;
 
 import no.javazone.ems.EmsAdapter;
-import no.javazone.ems.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +33,7 @@ public class SessionRepository {
         emsAdapter
                 .getEvents()
                 .forEach(event -> {
-                    System.out.println("Cached " + event.getSlug());
+                    LOG.info("Cached " + event.getSlug());
                     eventCache.put(event.getSlug(), event);
                 });
 

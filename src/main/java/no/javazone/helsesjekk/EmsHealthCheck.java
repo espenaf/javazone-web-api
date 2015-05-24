@@ -1,4 +1,4 @@
-package no.javazone;
+package no.javazone.helsesjekk;
 
 import com.codahale.metrics.health.HealthCheck;
 import no.javazone.ems.EmsAdapter;
