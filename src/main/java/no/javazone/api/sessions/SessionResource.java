@@ -40,9 +40,10 @@ public class SessionResource {
         return event
                 .getSessions()
                 .stream()
-                .map(foredrag -> new SessionDTO(
-                        foredrag.getTittel(),
-                        toForedragsholderDTO(foredrag.getForedragsholdere())))
+                .map(session -> new SessionDTO(
+                        session.getTittel(),
+                        session.getFormat(),
+                        toForedragsholderDTO(session.getForedragsholdere())))
                 .collect(Collectors.toList());
     }
 

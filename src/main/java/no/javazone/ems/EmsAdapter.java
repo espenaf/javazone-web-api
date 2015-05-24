@@ -97,6 +97,7 @@ public class EmsAdapter {
     private static Session mapItemTilForedrag(Item item) {
         return new Session(
                 mapItemProperty(item, "title"),
+                mapItemProperty(item, "format"),
                 getForedragsholdere(item.linkByRel("speaker collection")));
     }
 
