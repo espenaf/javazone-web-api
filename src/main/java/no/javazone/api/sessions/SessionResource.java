@@ -1,7 +1,6 @@
 package no.javazone.api.sessions;
 
 import no.javazone.sessions.Event;
-import no.javazone.sessions.Foredragsholder;
 import no.javazone.sessions.SessionRepository;
 
 import javax.ws.rs.GET;
@@ -12,7 +11,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Path("/event/{eventId}/sessions")
 @Produces(MediaType.APPLICATION_JSON)
@@ -28,7 +26,7 @@ public class SessionResource {
     public Response getForedrag(@PathParam("eventId") String eventSlug) {
         Optional<Event> eventOptional = sessionRepository.getSessions(eventSlug);
         if (eventOptional.isPresent()) {
-            List<SessionDTO> response = toSessionDTOs(eventOptional.get());
+            List<SessionDTO> response = SessionDTOMapper.toSessionDTOs(eventOptional.get());
             return Response.ok().entity(response).build();
 
         } else {
@@ -36,27 +34,4 @@ public class SessionResource {
         }
     }
 
-    private List<SessionDTO> toSessionDTOs(Event event) {
-        return event
-                .getSessions()
-                .stream()
-                .map(session -> new SessionDTO(
-                        session.getTittel(),
-                        session.getFormat(),
-                        session.getSlot().getStarter(),
-                        session.getSlot().getStopper(),
-                        toForedragsholderDTO(session.getForedragsholdere()),
-                        session.getSprak(),
-                        session.getNiva()))
-                .collect(Collectors.toList());
-    }
-
-    private List<ForedragsholderDTO> toForedragsholderDTO(List<Foredragsholder> foredragsholdere) {
-        return foredragsholdere
-                .stream()
-                .map(foredragsholder -> new ForedragsholderDTO(
-                        foredragsholder.getNavn(),
-                        foredragsholder.getGravatarUrl()))
-                .collect(Collectors.toList());
-    }
 }
