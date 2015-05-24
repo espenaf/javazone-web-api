@@ -110,7 +110,8 @@ public class EmsAdapter {
                 mapItemProperty(item, "title"),
                 mapItemProperty(item, "format"),
                 slot,
-                getForedragsholdere(item.linkByRel("speaker collection")));
+                getForedragsholdere(item.linkByRel("speaker collection")),
+                mapItemProperty(item, "lang"));
     }
 
     private static List<Foredragsholder> getForedragsholdere(Optional<Link> link) {

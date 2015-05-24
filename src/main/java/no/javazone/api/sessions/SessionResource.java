@@ -45,7 +45,8 @@ public class SessionResource {
                         session.getFormat(),
                         session.getSlot().getStarter(),
                         session.getSlot().getStopper(),
-                        toForedragsholderDTO(session.getForedragsholdere())))
+                        toForedragsholderDTO(session.getForedragsholdere()),
+                        session.getLang()))
                 .collect(Collectors.toList());
     }
 
