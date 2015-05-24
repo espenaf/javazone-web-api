@@ -43,6 +43,8 @@ public class SessionResource {
                 .map(session -> new SessionDTO(
                         session.getTittel(),
                         session.getFormat(),
+                        session.getStarter(),
+                        session.getStopper(),
                         toForedragsholderDTO(session.getForedragsholdere())))
                 .collect(Collectors.toList());
     }
