@@ -8,6 +8,7 @@ import no.javazone.sessions.Event;
 import no.javazone.sessions.Foredragsholder;
 import no.javazone.sessions.Session;
 import no.javazone.sessions.Slot;
+import org.glassfish.jersey.client.ClientProperties;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -21,10 +22,17 @@ import java.util.stream.Stream;
 
 public class EmsAdapter {
 
+    private static final int CONNECT_TIMOUT_IN_MILLISECONDS = 30 * 1000;
+    private static final int READ_TIMOUT_IN_MILLISECONDS = 30 * 1000;
+
     private final WebTarget emsWebTarget;
 
     public EmsAdapter(String emsHost) {
         Client client = ClientBuilder.newClient();
+
+        client.property(ClientProperties.CONNECT_TIMEOUT, CONNECT_TIMOUT_IN_MILLISECONDS);
+        client.property(ClientProperties.READ_TIMEOUT, READ_TIMOUT_IN_MILLISECONDS);
+
         emsWebTarget = client.target("http://" + emsHost);
     }
 
