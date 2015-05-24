@@ -7,6 +7,7 @@ import no.javazone.api.sessions.SessionResource;
 import no.javazone.ems.EmsAdapter;
 import no.javazone.helsesjekk.EmsHealthCheck;
 import no.javazone.sessions.SessionRepository;
+import no.javazone.sessions.SessionsCacheRefreshScheduler;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -39,8 +40,7 @@ public class JavaZoneWebApiApplication extends Application<JavaZoneWebApiConfigu
 
         final SessionRepository sessionRepository = new SessionRepository(emsAdapter);
 
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(
-                () -> sessionRepository.refresh(), 0, 10, TimeUnit.MINUTES);
+        new SessionsCacheRefreshScheduler(sessionRepository).schedule();
 
         environment.jersey().register(new SessionResource(sessionRepository));
 
