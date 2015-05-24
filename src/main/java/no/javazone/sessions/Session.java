@@ -5,20 +5,17 @@ import java.util.List;
 public class Session {
     private final String tittel;
     private final String format;
-    private final String starter;
-    private final String stopper;
+    private Slot slot;
     private final List<Foredragsholder> foredragsholdere;
 
     public Session(
             String tittel,
             String format,
-            String starter,
-            String stopper,
+            Slot slot,
             List<Foredragsholder> foredragsholdere) {
         this.tittel = tittel;
         this.format = format;
-        this.starter = starter;
-        this.stopper = stopper;
+        this.slot = slot;
         this.foredragsholdere = foredragsholdere;
     }
 
@@ -34,11 +31,7 @@ public class Session {
         return format;
     }
 
-    public String getStarter() {
-        return starter;
-    }
-
-    public String getStopper() {
-        return stopper;
+    public Slot getSlot() {
+        return slot;
     }
 }

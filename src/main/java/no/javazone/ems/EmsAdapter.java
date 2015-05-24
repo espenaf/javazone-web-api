@@ -7,6 +7,7 @@ import net.hamnaberg.json.parser.CollectionParser;
 import no.javazone.sessions.Event;
 import no.javazone.sessions.Foredragsholder;
 import no.javazone.sessions.Session;
+import no.javazone.sessions.Slot;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -95,34 +96,13 @@ public class EmsAdapter {
     }
 
     private static Session mapItemTilForedrag(Item item) {
-        String startTid = null;
-        String stopTid = null;
-        String slotString = extractSlotString(item);
-        if (slotString != null) {
-            String[] strings = slotString.split("\\+");
-            if (strings.length == 2) {
-                startTid = strings[0];
-                stopTid = strings[1];
-            }
-        }
+        Slot slot = SlotMapper.extractSlotString(item);
+
         return new Session(
                 mapItemProperty(item, "title"),
                 mapItemProperty(item, "format"),
-                startTid,
-                stopTid,
+                slot,
                 getForedragsholdere(item.linkByRel("speaker collection")));
-    }
-
-    private static String extractSlotString(final Item item) {
-        Optional<Link> slotLink = item.linkByRel("slot item");
-        if (!slotLink.isPresent()) {
-            return null;
-        }
-        Optional<String> slotPrompt = slotLink.get().getPrompt();
-        if (!slotPrompt.isPresent()) {
-            return null;
-        }
-        return slotPrompt.get();
     }
 
     private static List<Foredragsholder> getForedragsholdere(Optional<Link> link) {
