@@ -8,7 +8,8 @@ public class SessionDTO {
     public final String starter;
     public final String stopper;
     public final List<ForedragsholderDTO> foredragsholdere;
-    public final String lang;
+    public final String sprak;
+    public final String niva;
 
     public SessionDTO(
             String tittel,
@@ -16,13 +17,15 @@ public class SessionDTO {
             String starter,
             String stopper,
             List<ForedragsholderDTO> foredragsholdere,
-            String lang
+            String sprak,
+            String niva
     ) {
         this.tittel = tittel;
         this.format = format;
         this.starter = starter;
         this.stopper = stopper;
         this.foredragsholdere = foredragsholdere;
-        this.lang = lang;
+        this.sprak = sprak;
+        this.niva = niva;
     }
 }

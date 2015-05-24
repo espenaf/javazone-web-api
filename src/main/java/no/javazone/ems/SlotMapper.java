@@ -7,7 +7,7 @@ import no.javazone.sessions.Slot;
 import java.util.Optional;
 
 class SlotMapper {
-    public static Slot extractSlotString(final Item item) {
+    public static Slot mapToSlot(final Item item) {
         Optional<Link> slotLink = item.linkByRel("slot item");
         if (!slotLink.isPresent()) {
             return Slot.tom();
@@ -16,10 +16,10 @@ class SlotMapper {
         if (!slotPrompt.isPresent()) {
             return Slot.tom();
         }
-        return mapToSlot(slotPrompt.get());
+        return mapStringToSlot(slotPrompt.get());
     }
 
-    private static Slot mapToSlot(String slotString) {
+    private static Slot mapStringToSlot(String slotString) {
         String starter = null;
         String stopper = null;
 

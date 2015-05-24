@@ -7,20 +7,23 @@ public class Session {
     private final String format;
     private final Slot slot;
     private final List<Foredragsholder> foredragsholdere;
-    private final String lang;
+    private final String sprak;
+    private final String niva;
 
     public Session(
             String tittel,
             String format,
             Slot slot,
             List<Foredragsholder> foredragsholdere,
-            String lang
+            String sprak,
+            String niva
     ) {
         this.tittel = tittel;
         this.format = format;
         this.slot = slot;
         this.foredragsholdere = foredragsholdere;
-        this.lang = lang;
+        this.sprak = sprak;
+        this.niva = niva;
     }
 
     public String getTittel() {
@@ -39,7 +42,11 @@ public class Session {
         return slot;
     }
 
-    public String getLang() {
-        return lang;
+    public String getSprak() {
+        return sprak;
+    }
+
+    public String getNiva() {
+        return niva;
     }
 }

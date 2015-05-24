@@ -7,7 +7,6 @@ import net.hamnaberg.json.parser.CollectionParser;
 import no.javazone.sessions.Event;
 import no.javazone.sessions.Foredragsholder;
 import no.javazone.sessions.Session;
-import no.javazone.sessions.Slot;
 import org.glassfish.jersey.client.ClientProperties;
 
 import javax.ws.rs.client.Client;
@@ -104,14 +103,13 @@ public class EmsAdapter {
     }
 
     private static Session mapItemTilForedrag(Item item) {
-        Slot slot = SlotMapper.extractSlotString(item);
-
         return new Session(
                 mapItemProperty(item, "title"),
                 mapItemProperty(item, "format"),
-                slot,
+                SlotMapper.mapToSlot(item),
                 getForedragsholdere(item.linkByRel("speaker collection")),
-                mapItemProperty(item, "lang"));
+                mapItemProperty(item, "lang"),
+                mapItemProperty(item, "level"));
     }
 
     private static List<Foredragsholder> getForedragsholdere(Optional<Link> link) {
