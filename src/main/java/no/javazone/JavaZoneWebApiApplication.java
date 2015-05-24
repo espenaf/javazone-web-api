@@ -10,13 +10,13 @@ import no.javazone.sessions.SessionRepository;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class HelloWorldApplication extends Application<HelloWorldConfiguration> {
+public class JavaZoneWebApiApplication extends Application<JavaZoneWebApiConfiguration> {
 
     public static void main(String[] args) throws Exception {
         if (args.length == 0) {
             args = new String[]{"server", "configuration.yaml"};
         }
-        new HelloWorldApplication().run(args);
+        new JavaZoneWebApiApplication().run(args);
     }
 
     @Override
@@ -25,13 +25,13 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
     }
 
     @Override
-    public void initialize(Bootstrap<HelloWorldConfiguration> bootstrap) {
+    public void initialize(Bootstrap<JavaZoneWebApiConfiguration> bootstrap) {
         // nothing to do yet
     }
 
     @Override
     public void run(
-            HelloWorldConfiguration configuration,
+            JavaZoneWebApiConfiguration configuration,
             Environment environment
     ) {
         final HelloWorldResource resource = new HelloWorldResource();

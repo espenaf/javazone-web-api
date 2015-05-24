@@ -12,11 +12,11 @@ import javax.ws.rs.core.Response;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class HelloWorldApplicationTest {
+public class JavaZoneWebApiApplicationTest {
 
     @ClassRule
-    public static final DropwizardAppRule<HelloWorldConfiguration> RULE =
-            new DropwizardAppRule<>(HelloWorldApplication.class,
+    public static final DropwizardAppRule<JavaZoneWebApiConfiguration> RULE =
+            new DropwizardAppRule<>(JavaZoneWebApiApplication.class,
                     ResourceHelpers.resourceFilePath("test-configuration.yaml"),
                     ConfigOverride.config("server.applicationConnectors[0].port", "9090"));
 

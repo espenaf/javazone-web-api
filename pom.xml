@@ -156,7 +156,7 @@
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>no.javazone.HelloWorldApplication</mainClass>
+                                    <mainClass>no.javazone.JavaZoneWebApiApplication</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

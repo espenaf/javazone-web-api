@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import java.util.List;
 
-public class HelloWorldConfiguration extends Configuration {
+public class JavaZoneWebApiConfiguration extends Configuration {
     @NotEmpty
     private String emsHost;
 
