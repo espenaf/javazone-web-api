@@ -18,11 +18,12 @@ public class JavaZoneWebApiApplicationTest {
     public static final DropwizardAppRule<JavaZoneWebApiConfiguration> RULE =
             new DropwizardAppRule<>(JavaZoneWebApiApplication.class,
                     ResourceHelpers.resourceFilePath("test-configuration.yaml"),
-                    ConfigOverride.config("server.applicationConnectors[0].port", "9090"));
+                    ConfigOverride.config("server.adminConnectors[0].port", "9091"));
 
     @Test
     public void server_svarer_200_ok() {
-        WebTarget resource = ClientBuilder.newClient().target("http://localhost:" + RULE.getLocalPort() + "/hello-world");
+        WebTarget resource = ClientBuilder.newClient()
+                .target("http://localhost:" + RULE.getAdminPort() + "/healthcheck");
 
         final Response response = resource.request().get();
         assertThat(response.getStatus()).isEqualTo(200);

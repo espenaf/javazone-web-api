@@ -2,5 +2,8 @@ server:
   applicationConnectors:
   - type: http 
     port: 8889
+  adminConnectors:
+  - type: http
+    port: 8890
 
 emsHost: test.javazone.no

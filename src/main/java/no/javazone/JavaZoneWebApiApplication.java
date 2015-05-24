@@ -34,9 +34,6 @@ public class JavaZoneWebApiApplication extends Application<JavaZoneWebApiConfigu
             JavaZoneWebApiConfiguration configuration,
             Environment environment
     ) {
-        final HelloWorldResource resource = new HelloWorldResource();
-        environment.jersey().register(resource);
-
         final EmsAdapter emsAdapter = new EmsAdapter(configuration.getEmsHost());
 
         final SessionRepository sessionRepository = new SessionRepository(emsAdapter);
