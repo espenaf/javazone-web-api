@@ -1,8 +1,6 @@
 package no.javazone.ems;
 
-import net.hamnaberg.json.Collection;
-import net.hamnaberg.json.Item;
-import net.hamnaberg.json.Link;
+import net.hamnaberg.json.*;
 import net.hamnaberg.json.parser.CollectionParser;
 import no.javazone.sessions.Event;
 import no.javazone.sessions.Foredragsholder;
@@ -110,7 +108,8 @@ public class EmsAdapter {
                 SlotMapper.mapToSlot(item),
                 getForedragsholdere(item.linkByRel("speaker collection")),
                 mapItemProperty(item, "lang"),
-                mapItemProperty(item, "level"));
+                mapItemProperty(item, "level"),
+                mapItemProperty(item, "summary"));
     }
 
     private static List<Foredragsholder> getForedragsholdere(Optional<Link> link) {
@@ -140,7 +139,17 @@ public class EmsAdapter {
                 mapItemProperty(item, "bio"));
     }
 
-    private static String mapItemProperty(Item item, String property) {
-        return item.propertyByName(property).get().getValue().get().asString();
+    private static String mapItemProperty(Item item, String propertyName) {
+        Optional<Property> propertyOptional = item.propertyByName(propertyName);
+        if (!propertyOptional.isPresent()) {
+            return null;
+        }
+
+        Optional<Value> valueOptional = propertyOptional.get().getValue();
+        if (!valueOptional.isPresent()) {
+            return null;
+        }
+
+        return valueOptional.get().asString();
     }
 }

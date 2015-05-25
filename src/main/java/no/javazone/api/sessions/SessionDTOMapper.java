@@ -33,7 +33,8 @@ class SessionDTOMapper {
                 session.getTittel(),
                 session.getSlot().getStarter(),
                 session.getSlot().getStopper(),
-                session.getNiva());
+                session.getNiva(),
+                session.getOppsummering());
     }
 
     private static List<ForedragsholderDTO> toForedragsholderDTO(List<Foredragsholder> foredragsholdere) {
