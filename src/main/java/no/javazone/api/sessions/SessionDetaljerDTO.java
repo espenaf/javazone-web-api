@@ -6,18 +6,21 @@ public class SessionDetaljerDTO {
     public final String stopper;
     public final String niva;
     public final String oppsummering;
+    public final String beskrivelse;
 
     public SessionDetaljerDTO(
             String tittel,
             String starter,
             String stopper,
             String niva,
-            String oppsummering
+            String oppsummering,
+            String beskrivelse
     ) {
         this.tittel = tittel;
         this.starter = starter;
         this.stopper = stopper;
         this.niva = niva;
         this.oppsummering = oppsummering;
+        this.beskrivelse = beskrivelse;
     }
 }

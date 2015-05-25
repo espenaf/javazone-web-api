@@ -11,6 +11,7 @@ public class Session {
     private final String sprak;
     private final String niva;
     private final String oppsummering;
+    private final String beskrivelse;
 
     public Session(
             SessionId id,
@@ -20,7 +21,8 @@ public class Session {
             List<Foredragsholder> foredragsholdere,
             String sprak,
             String niva,
-            String oppsummering
+            String oppsummering,
+            String beskrivelse
     ) {
         this.id = id;
         this.tittel = tittel;
@@ -30,6 +32,7 @@ public class Session {
         this.sprak = sprak;
         this.niva = niva;
         this.oppsummering = oppsummering;
+        this.beskrivelse = beskrivelse;
     }
 
     public SessionId getId() {
@@ -62,5 +65,9 @@ public class Session {
 
     public String getOppsummering() {
         return oppsummering;
+    }
+
+    public String getBeskrivelse() {
+        return beskrivelse;
     }
 }
