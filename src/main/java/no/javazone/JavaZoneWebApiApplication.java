@@ -9,9 +9,6 @@ import no.javazone.helsesjekk.EmsHealthCheck;
 import no.javazone.sessions.SessionRepository;
 import no.javazone.sessions.SessionsCacheRefreshScheduler;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
 public class JavaZoneWebApiApplication extends Application<JavaZoneWebApiConfiguration> {
 
     public static void main(String[] args) throws Exception {

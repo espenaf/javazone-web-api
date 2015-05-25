@@ -4,19 +4,19 @@ import java.util.List;
 
 public class Event {
 
+    private final String slug;
     private final List<Session> sessions;
-    private String slug;
 
     public Event(List<Session> sessions, String slug) {
         this.sessions = sessions;
         this.slug = slug;
     }
 
-    public List<Session> getSessions() {
-        return sessions;
-    }
-
     public String getSlug() {
         return slug;
+    }
+
+    public List<Session> getSessions() {
+        return sessions;
     }
 }

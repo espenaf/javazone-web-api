@@ -3,6 +3,7 @@ package no.javazone.sessions;
 import java.util.List;
 
 public class Session {
+    private final SessionId id;
     private final String tittel;
     private final String format;
     private final Slot slot;
@@ -11,6 +12,7 @@ public class Session {
     private final String niva;
 
     public Session(
+            SessionId id,
             String tittel,
             String format,
             Slot slot,
@@ -18,12 +20,17 @@ public class Session {
             String sprak,
             String niva
     ) {
+        this.id = id;
         this.tittel = tittel;
         this.format = format;
         this.slot = slot;
         this.foredragsholdere = foredragsholdere;
         this.sprak = sprak;
         this.niva = niva;
+    }
+
+    public SessionId getId() {
+        return id;
     }
 
     public String getTittel() {

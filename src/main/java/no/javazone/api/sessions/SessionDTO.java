@@ -1,5 +1,7 @@
 package no.javazone.api.sessions;
 
+import no.javazone.api.LinkDTO;
+
 import java.util.List;
 
 public class SessionDTO {
@@ -10,6 +12,7 @@ public class SessionDTO {
     public final List<ForedragsholderDTO> foredragsholdere;
     public final String sprak;
     public final String niva;
+    public final List<LinkDTO> links;
 
     public SessionDTO(
             String tittel,
@@ -18,7 +21,8 @@ public class SessionDTO {
             String stopper,
             List<ForedragsholderDTO> foredragsholdere,
             String sprak,
-            String niva
+            String niva,
+            List<LinkDTO> links
     ) {
         this.tittel = tittel;
         this.format = format;
@@ -27,5 +31,6 @@ public class SessionDTO {
         this.foredragsholdere = foredragsholdere;
         this.sprak = sprak;
         this.niva = niva;
+        this.links = links;
     }
 }

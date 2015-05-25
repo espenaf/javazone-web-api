@@ -104,6 +104,7 @@ public class EmsAdapter {
 
     private static Session mapItemTilForedrag(Item item) {
         return new Session(
+                SessionIdMapper.generateId(item),
                 mapItemProperty(item, "title"),
                 mapItemProperty(item, "format"),
                 SlotMapper.mapToSlot(item),

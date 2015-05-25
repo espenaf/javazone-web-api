@@ -27,6 +27,15 @@ public class SessionRepository {
         }
     }
 
+    public Optional<Session> getSession(String eventSlug, String sessionId) {
+        Optional<Event> sessions = getSessions(eventSlug);
+        if (!sessions.isPresent()) {
+            return Optional.empty();
+        }
+
+        return null;
+    }
+
     public void refresh() {
         LOG.info("Caching starta");
 
