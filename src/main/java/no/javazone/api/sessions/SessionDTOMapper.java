@@ -6,12 +6,13 @@ import no.javazone.sessions.Foredragsholder;
 import no.javazone.sessions.Session;
 
 import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 class SessionDTOMapper {
-    public static List<SessionDTO> toSessionDTOs(Event event, UriBuilder absolutePathBuilder) {
+    public static List<SessionDTO> toSessionDTOs(Event event, UriInfo uriInfo) {
         return event
                 .getSessions()
                 .stream()
@@ -23,14 +24,8 @@ class SessionDTOMapper {
                         toForedragsholderDTO(session.getForedragsholdere()),
                         session.getSprak(),
                         session.getNiva(),
-                        createLinks(absolutePathBuilder, session)))
+                        createLinks(uriInfo, session)))
                 .collect(Collectors.toList());
-    }
-
-    private static List<LinkDTO> createLinks(UriBuilder absolutePathBuilder, Session session) {
-        ArrayList<LinkDTO> links = new ArrayList<>();
-        links.add(new LinkDTO("detaljer", absolutePathBuilder.path(session.getId().getValue()).build()));
-        return links;
     }
 
     private static List<ForedragsholderDTO> toForedragsholderDTO(List<Foredragsholder> foredragsholdere) {
@@ -40,5 +35,18 @@ class SessionDTOMapper {
                         foredragsholder.getNavn(),
                         foredragsholder.getGravatarUrl()))
                 .collect(Collectors.toList());
+    }
+
+    private static List<LinkDTO> createLinks(UriInfo uriInfo, Session session) {
+        ArrayList<LinkDTO> links = new ArrayList<>();
+
+        links.add(createDetaljerLink(session, uriInfo));
+
+        return links;
+    }
+
+    private static LinkDTO createDetaljerLink(Session session, UriInfo uriInfo) {
+        UriBuilder absolutePathBuilder = uriInfo.getAbsolutePathBuilder();
+        return new LinkDTO("detaljer", absolutePathBuilder.path(session.getId().getValue()).build());
     }
 }

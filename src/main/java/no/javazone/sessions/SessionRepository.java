@@ -27,13 +27,15 @@ public class SessionRepository {
         }
     }
 
-    public Optional<Session> getSession(String eventSlug, String sessionId) {
-        Optional<Event> sessions = getSessions(eventSlug);
-        if (!sessions.isPresent()) {
+    public Optional<Session> getSession(String eventSlug, SessionId sessionId) {
+        Optional<Event> eventOptional = getSessions(eventSlug);
+        if (!eventOptional.isPresent()) {
             return Optional.empty();
         }
 
-        return null;
+        Event event = eventOptional.get();
+
+        return event.findSessionById(sessionId);
     }
 
     public void refresh() {

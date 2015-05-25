@@ -2,6 +2,7 @@ package no.javazone.api.sessions;
 
 import no.javazone.sessions.Event;
 import no.javazone.sessions.Session;
+import no.javazone.sessions.SessionId;
 import no.javazone.sessions.SessionRepository;
 
 import javax.ws.rs.GET;
@@ -31,11 +32,9 @@ public class SessionResource {
         Optional<Event> eventOptional = sessionRepository.getSessions(eventSlug);
 
         if (eventOptional.isPresent()) {
-            UriBuilder absolutePathBuilder = uriInfo.getAbsolutePathBuilder();
-
             List<SessionDTO> response = SessionDTOMapper.toSessionDTOs(
                     eventOptional.get(),
-                    absolutePathBuilder);
+                    uriInfo);
 
             return Response.ok().entity(response).build();
 
@@ -50,7 +49,14 @@ public class SessionResource {
             @PathParam("eventId") String eventSlug,
             @PathParam("sessionId") String sessionId
     ) {
-        Optional<Session> sessionOptional = sessionRepository.getSession(eventSlug, sessionId);
+        Optional<Session> sessionOptional = sessionRepository.getSession(
+                eventSlug, new SessionId(sessionId));
+
+        if (sessionOptional.isPresent()) {
+            Session session = sessionOptional.get();
+            return Response.ok().entity(session.getTittel()).build();
+        }
+
         return Response.ok().entity("hei hei").build();
     }
 
