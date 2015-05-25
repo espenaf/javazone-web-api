@@ -28,6 +28,14 @@ class SessionDTOMapper {
                 .collect(Collectors.toList());
     }
 
+    public static SessionDetaljerDTO toSessionDetaljerDTO(Session session) {
+        return new SessionDetaljerDTO(
+                session.getTittel(),
+                session.getSlot().getStarter(),
+                session.getSlot().getStopper(),
+                session.getNiva());
+    }
+
     private static List<ForedragsholderDTO> toForedragsholderDTO(List<Foredragsholder> foredragsholdere) {
         return foredragsholdere
                 .stream()
