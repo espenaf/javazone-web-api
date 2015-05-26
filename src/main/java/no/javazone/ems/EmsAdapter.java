@@ -141,16 +141,9 @@ public class EmsAdapter {
     }
 
     private static String mapItemProperty(Item item, String propertyName) {
-        Optional<Property> propertyOptional = item.propertyByName(propertyName);
-        if (!propertyOptional.isPresent()) {
-            return null;
-        }
-
-        Optional<Value> valueOptional = propertyOptional.get().getValue();
-        if (!valueOptional.isPresent()) {
-            return null;
-        }
-
-        return valueOptional.get().asString();
+        return item.propertyByName(propertyName)
+                .flatMap(Property::getValue)
+                .map(Value::asString)
+                .orElse(null);
     }
 }

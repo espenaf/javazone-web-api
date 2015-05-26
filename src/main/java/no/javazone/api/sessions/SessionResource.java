@@ -13,7 +13,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.util.List;
 import java.util.Optional;
 
 @Path("/event/{eventId}/sessions")
@@ -33,16 +32,10 @@ public class SessionResource {
     public Response getSessions(@PathParam("eventId") String eventSlug) {
         Optional<Event> eventOptional = sessionRepository.getSessions(eventSlug);
 
-        if (eventOptional.isPresent()) {
-            List<SessionDTO> response = SessionDTOMapper.toSessionDTOs(
-                    eventOptional.get(),
-                    uriInfo);
-
-            return Response.ok().entity(response).build();
-
-        } else {
-            return Response.status(503).build();
-        }
+        return eventOptional
+            .map(x -> SessionDTOMapper.toSessionDTOs(x, uriInfo))
+            .map(x -> Response.ok().entity(x).build())
+            .orElse(Response.status(503).build());
     }
 
     @GET
@@ -51,18 +44,12 @@ public class SessionResource {
             @PathParam("eventId") String eventSlug,
             @PathParam("sessionId") String sessionId
     ) {
-        Optional<Session> sessionOptional = sessionRepository.getSession(
-                eventSlug, new SessionId(sessionId));
+        Optional<Session> sessionOptional = sessionRepository.getSession(eventSlug, new SessionId(sessionId));
 
-        if (sessionOptional.isPresent()) {
-            SessionDetaljerDTO sessionDetaljerDTO = SessionDTOMapper
-                    .toSessionDetaljerDTO(sessionOptional.get());
+        return sessionOptional.map(SessionDTOMapper::toSessionDetaljerDTO)
+            .map(x -> Response.ok().entity(x).build())
+            .orElse(Response.status(503).build());
 
-            return Response.ok().entity(sessionDetaljerDTO).build();
-
-        } else {
-            return Response.status(503).build();
-        }
     }
 
 }

@@ -31,10 +31,6 @@ public class Event {
     }
 
     public Optional<Session> findSessionById(SessionId sessionId) {
-        if (sessions.containsKey(sessionId)) {
-            return Optional.of(sessions.get(sessionId));
-        } else {
-            return Optional.empty();
-        }
+        return Optional.ofNullable(sessions.get(sessionId));
     }
 }

@@ -20,22 +20,12 @@ public class SessionRepository {
     }
 
     public Optional<Event> getSessions(String eventSlug) {
-        if (eventCache.containsKey(eventSlug)) {
-            return Optional.of(eventCache.get(eventSlug));
-        } else {
-            return Optional.empty();
-        }
+        return Optional.ofNullable(eventCache.get(eventSlug));
     }
 
     public Optional<Session> getSession(String eventSlug, SessionId sessionId) {
-        Optional<Event> eventOptional = getSessions(eventSlug);
-        if (!eventOptional.isPresent()) {
-            return Optional.empty();
-        }
-
-        Event event = eventOptional.get();
-
-        return event.findSessionById(sessionId);
+        return getSessions(eventSlug)
+                .flatMap(x -> x.findSessionById(sessionId));
     }
 
     public void refresh() {

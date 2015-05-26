@@ -1,5 +1,7 @@
 package no.javazone.sessions;
 
+import java.util.Objects;
+
 public class SessionId {
     private final String value;
 
@@ -18,13 +20,11 @@ public class SessionId {
 
         SessionId sessionId = (SessionId) o;
 
-        if (value != null ? !value.equals(sessionId.value) : sessionId.value != null) return false;
-
-        return true;
+        return Objects.equals(value, sessionId.value);
     }
 
     @Override
     public int hashCode() {
-        return value != null ? value.hashCode() : 0;
+        return Objects.hash(value);
     }
 }
