@@ -33,4 +33,19 @@ public class SessionDTO {
         this.niva = niva;
         this.links = links;
     }
+
+
+    private SessionDTO() {
+        // For (de)serialization
+        this.tittel = null;
+        this.format = null;
+        this.starter = null;
+        this.stopper = null;
+        this.foredragsholdere = null;
+        this.sprak = null;
+        this.niva = null;
+        this.links = null;
+    }
+
+
 }

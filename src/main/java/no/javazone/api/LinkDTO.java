@@ -10,4 +10,9 @@ public class LinkDTO {
         this.rel = rel;
         this.href = href;
     }
+
+    private LinkDTO() {
+        this.rel = null;
+        this.href = null;
+    }
 }

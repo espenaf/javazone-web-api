@@ -8,4 +8,9 @@ public class ForedragsholderDTO {
         this.navn = navn;
         this.gravatarUrl = gravatarUrl;
     }
+
+    private ForedragsholderDTO() {
+        this.navn = null;
+        this.gravatarUrl = null;
+    }
 }

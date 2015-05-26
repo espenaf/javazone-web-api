@@ -23,4 +23,14 @@ public class SessionDetaljerDTO {
         this.oppsummering = oppsummering;
         this.beskrivelse = beskrivelse;
     }
+
+    private SessionDetaljerDTO() {
+        this.tittel = null;
+        this.starter = null;
+        this.stopper = null;
+        this.niva = null;
+        this.oppsummering = null;
+        this.beskrivelse = null;
+    }
+
 }
