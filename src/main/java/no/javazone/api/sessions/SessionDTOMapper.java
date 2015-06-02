@@ -43,7 +43,7 @@ class SessionDTOMapper {
                 .stream()
                 .map(foredragsholder -> new ForedragsholderDTO(
                         foredragsholder.getNavn(),
-                        foredragsholder.getGravatarUrl()))
+                        foredragsholder.getBio()))
                 .collect(Collectors.toList());
     }
 
