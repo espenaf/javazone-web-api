@@ -6,6 +6,7 @@ import io.dropwizard.setup.Environment;
 import no.javazone.api.sessions.SessionResource;
 import no.javazone.ems.EmsAdapter;
 import no.javazone.helsesjekk.EmsHealthCheck;
+import no.javazone.http.AddCorsHeaderToResponse;
 import no.javazone.sessions.SessionRepository;
 import no.javazone.sessions.SessionsCacheRefreshScheduler;
 
@@ -39,6 +40,7 @@ public class JavaZoneWebApiApplication extends Application<JavaZoneWebApiConfigu
 
         new SessionsCacheRefreshScheduler(sessionRepository).schedule();
 
+        environment.jersey().register(new AddCorsHeaderToResponse());
         environment.jersey().register(new SessionResource(sessionRepository));
 
         environment.healthChecks().register("ems", new EmsHealthCheck(emsAdapter));
