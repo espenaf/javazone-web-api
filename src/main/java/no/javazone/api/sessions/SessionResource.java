@@ -1,5 +1,6 @@
 package no.javazone.api.sessions;
 
+import no.javazone.http.PathResolver;
 import no.javazone.sessions.Event;
 import no.javazone.sessions.Session;
 import no.javazone.sessions.SessionId;
@@ -13,18 +14,21 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.util.Optional;
 
 @Path("/event/{eventId}/sessions")
 @Produces(MediaType.APPLICATION_JSON)
 public class SessionResource {
 
+    private PathResolver pathResolver;
     private SessionRepository sessionRepository;
 
     @Context
     private UriInfo uriInfo;
 
-    public SessionResource(SessionRepository sessionRepository) {
+    public SessionResource(PathResolver pathResolver, SessionRepository sessionRepository) {
+        this.pathResolver = pathResolver;
         this.sessionRepository = sessionRepository;
     }
 
@@ -33,7 +37,7 @@ public class SessionResource {
         Optional<Event> eventOptional = sessionRepository.getSessions(eventSlug);
 
         return eventOptional
-            .map(x -> SessionDTOMapper.toSessionDTOs(x, uriInfo))
+            .map(x -> SessionDTOMapper.toSessionDTOs(x, pathResolver.path(uriInfo)))
             .map(x -> Response.ok().entity(x).build())
             .orElse(Response.status(503).build());
     }

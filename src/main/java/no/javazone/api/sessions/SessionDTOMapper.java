@@ -6,13 +6,13 @@ import no.javazone.sessions.Foredragsholder;
 import no.javazone.sessions.Session;
 
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 class SessionDTOMapper {
-    public static List<SessionDTO> toSessionDTOs(Event event, UriInfo uriInfo) {
+    public static List<SessionDTO> toSessionDTOs(Event event, URI contextPath) {
         return event
                 .getSessions()
                 .stream()
@@ -24,7 +24,7 @@ class SessionDTOMapper {
                         toForedragsholderDTO(session.getForedragsholdere()),
                         session.getSprak(),
                         session.getNiva(),
-                        createLinks(uriInfo, session)))
+                        createLinks(contextPath, session)))
                 .collect(Collectors.toList());
     }
 
@@ -47,16 +47,16 @@ class SessionDTOMapper {
                 .collect(Collectors.toList());
     }
 
-    private static List<LinkDTO> createLinks(UriInfo uriInfo, Session session) {
+    private static List<LinkDTO> createLinks(URI contextPath, Session session) {
         ArrayList<LinkDTO> links = new ArrayList<>();
 
-        links.add(createDetaljerLink(session, uriInfo));
+        links.add(createDetaljerLink(session, contextPath));
 
         return links;
     }
 
-    private static LinkDTO createDetaljerLink(Session session, UriInfo uriInfo) {
-        UriBuilder absolutePathBuilder = uriInfo.getAbsolutePathBuilder();
+    private static LinkDTO createDetaljerLink(Session session, URI contextPath) {
+        UriBuilder absolutePathBuilder = UriBuilder.fromUri(contextPath);
         return new LinkDTO("detaljer", absolutePathBuilder.path(session.getId().getValue()).build());
     }
 }

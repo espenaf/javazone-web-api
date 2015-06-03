@@ -3,16 +3,19 @@ package no.javazone.api.sessions;
 import com.google.common.collect.Lists;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import no.javazone.ems.EmsAdapter;
+import no.javazone.http.PathResolver;
 import no.javazone.sessions.*;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
-
+import java.net.URI;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -21,9 +24,16 @@ public class SessionResourceTest {
     private static final EmsAdapter mock = mock(EmsAdapter.class);
 
     private static final SessionRepository sessionRepository = new SessionRepository(mock);
+    private static final PathResolver pathResolver = mock(PathResolver.class);
+
+    @Before
+    public void setup() {
+        when(pathResolver.path(any())).thenReturn(URI.create("http://localhost"));
+    }
+
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-            .addResource(new SessionResource(sessionRepository))
+            .addResource(new SessionResource(pathResolver, sessionRepository))
             .build();
 
     @Test

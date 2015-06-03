@@ -19,4 +19,8 @@ if [ "z$APP_FOREGROUND" = "z" ]; then
   exec 2>&1
 fi
 
+if [ -f $APP_HOME/environment ]; then
+  source $APP_HOME/environment
+fi
+
 exec java -jar bin/javazone-web-api*.jar server configuration.yaml
