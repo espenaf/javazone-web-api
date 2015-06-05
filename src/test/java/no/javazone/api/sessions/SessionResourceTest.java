@@ -13,6 +13,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -53,7 +54,17 @@ public class SessionResourceTest {
     private List<Event> lag_test_sesjon() {
         List<Event> events = Lists.newArrayList();
         List<Foredragsholder> foredragsholdere = Lists.<Foredragsholder>newArrayList();
-        Session sessions = new Session(new SessionId("123"), "tittel", "format", new Slot("start", "slutt"), foredragsholdere, "norsk", "awesome", "Awesome", "Awesome");
+        Session sessions = new Session(
+                new SessionId("123"),
+                "tittel",
+                "format",
+                new Slot("start", "slutt"),
+                foredragsholdere,
+                "norsk",
+                "awesome",
+                "Awesome",
+                "Awesome",
+                Optional.empty());
         events.add(new Event(Lists.newArrayList(sessions), "test-event-slug"));
         return events;
     }

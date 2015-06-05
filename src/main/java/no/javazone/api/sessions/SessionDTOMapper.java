@@ -51,8 +51,15 @@ class SessionDTOMapper {
         ArrayList<LinkDTO> links = new ArrayList<>();
 
         links.add(createDetaljerLink(session, contextPath));
+        links.add(createVideoLink(session));
 
         return links;
+    }
+
+    private static LinkDTO createVideoLink(Session session) {
+        return session.getVideoUri()
+                .map(videoUri -> new LinkDTO("video", videoUri))
+                .orElse(null);
     }
 
     private static LinkDTO createDetaljerLink(Session session, URI contextPath) {

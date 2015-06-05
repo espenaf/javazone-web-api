@@ -1,6 +1,8 @@
 package no.javazone.sessions;
 
+import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 public class Session {
     private final SessionId id;
@@ -12,6 +14,7 @@ public class Session {
     private final String niva;
     private final String oppsummering;
     private final String beskrivelse;
+    private final Optional<URI> videoUri;
 
     public Session(
             SessionId id,
@@ -22,8 +25,8 @@ public class Session {
             String sprak,
             String niva,
             String oppsummering,
-            String beskrivelse
-    ) {
+            String beskrivelse,
+            Optional<URI> videoUri) {
         this.id = id;
         this.tittel = tittel;
         this.format = format;
@@ -33,6 +36,7 @@ public class Session {
         this.niva = niva;
         this.oppsummering = oppsummering;
         this.beskrivelse = beskrivelse;
+        this.videoUri = videoUri;
     }
 
     public SessionId getId() {
@@ -69,5 +73,9 @@ public class Session {
 
     public String getBeskrivelse() {
         return beskrivelse;
+    }
+
+    public Optional<URI> getVideoUri() {
+        return videoUri;
     }
 }

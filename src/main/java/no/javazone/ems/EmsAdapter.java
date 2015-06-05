@@ -11,6 +11,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -110,7 +111,8 @@ public class EmsAdapter {
                 mapItemProperty(item, "lang"),
                 mapItemProperty(item, "level"),
                 mapItemProperty(item, "summary"),
-                mapItemProperty(item, "body"));
+                mapItemProperty(item, "body"),
+                mapLink(item, "alternate video"));
     }
 
     private static List<Foredragsholder> getForedragsholdere(Optional<Link> link) {
@@ -145,5 +147,11 @@ public class EmsAdapter {
                 .flatMap(Property::getValue)
                 .map(Value::asString)
                 .orElse(null);
+    }
+
+    private static Optional<URI> mapLink(Item item, String rel) {
+        return item.linkByRel(rel)
+                .map(link -> Optional.of(link.getHref()))
+                .orElse(Optional.empty());
     }
 }
