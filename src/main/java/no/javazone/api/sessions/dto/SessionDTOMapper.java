@@ -1,4 +1,4 @@
-package no.javazone.api.sessions;
+package no.javazone.api.sessions.dto;
 
 import no.javazone.api.LinkDTO;
 import no.javazone.sessions.Event;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class SessionDTOMapper {
+public class SessionDTOMapper {
     public static List<SessionDTO> toSessionDTOs(Event event, URI contextPath) {
         return event
                 .getSessions()
@@ -25,26 +25,6 @@ class SessionDTOMapper {
                         session.getSprak(),
                         session.getNiva(),
                         createLinks(contextPath, session)))
-                .collect(Collectors.toList());
-    }
-
-    public static SessionDetaljerDTO toSessionDetaljerDTO(Session session) {
-        return new SessionDetaljerDTO(
-                session.getTittel(),
-                session.getSlot().getStarter(),
-                session.getSlot().getStopper(),
-                session.getNiva(),
-                session.getOppsummering(),
-                session.getBeskrivelse(),
-                mapToForedragsholderDetaljerDTOs(session));
-    }
-
-    private static List<ForedragsholderDetaljerDTO> mapToForedragsholderDetaljerDTOs(Session session) {
-        return session.getForedragsholdere()
-                .stream()
-                .map(foredragsholder -> new ForedragsholderDetaljerDTO(
-                        foredragsholder.getNavn(),
-                        foredragsholder.getBio()))
                 .collect(Collectors.toList());
     }
 

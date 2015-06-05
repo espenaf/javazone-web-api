@@ -2,6 +2,7 @@ package no.javazone.api.sessions;
 
 import com.google.common.collect.Lists;
 import io.dropwizard.testing.junit.ResourceTestRule;
+import no.javazone.api.sessions.dto.SessionDTO;
 import no.javazone.ems.EmsAdapter;
 import no.javazone.http.PathResolver;
 import no.javazone.sessions.*;

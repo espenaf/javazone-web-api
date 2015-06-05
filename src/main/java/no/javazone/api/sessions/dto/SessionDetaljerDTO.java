@@ -1,4 +1,4 @@
-package no.javazone.api.sessions;
+package no.javazone.api.sessions.dto;
 
 import java.util.ArrayList;
 import java.util.List;

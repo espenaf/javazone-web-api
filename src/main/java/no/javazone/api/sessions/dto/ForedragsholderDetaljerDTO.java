@@ -1,4 +1,4 @@
-package no.javazone.api.sessions;
+package no.javazone.api.sessions.dto;
 
 public class ForedragsholderDetaljerDTO {
     public final String navn;

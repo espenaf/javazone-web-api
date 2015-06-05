@@ -1,5 +1,7 @@
 package no.javazone.api.sessions;
 
+import no.javazone.api.sessions.dto.SessionDTOMapper;
+import no.javazone.api.sessions.dto.SessionDetaljerDTOMapper;
 import no.javazone.http.PathResolver;
 import no.javazone.sessions.Event;
 import no.javazone.sessions.Session;
@@ -14,7 +16,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 import java.util.Optional;
 
 @Path("/event/{eventId}/sessions")
@@ -50,7 +51,7 @@ public class SessionResource {
     ) {
         Optional<Session> sessionOptional = sessionRepository.getSession(eventSlug, new SessionId(sessionId));
 
-        return sessionOptional.map(SessionDTOMapper::toSessionDetaljerDTO)
+        return sessionOptional.map(SessionDetaljerDTOMapper::toSessionDetaljerDTO)
             .map(x -> Response.ok().entity(x).build())
             .orElse(Response.status(503).build());
 
