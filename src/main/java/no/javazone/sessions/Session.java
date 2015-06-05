@@ -15,6 +15,7 @@ public class Session {
     private final String oppsummering;
     private final String beskrivelse;
     private final Optional<URI> videoUri;
+    private final String rom;
 
     public Session(
             SessionId id,
@@ -26,7 +27,8 @@ public class Session {
             String niva,
             String oppsummering,
             String beskrivelse,
-            Optional<URI> videoUri) {
+            Optional<URI> videoUri,
+            String rom) {
         this.id = id;
         this.tittel = tittel;
         this.format = format;
@@ -37,6 +39,7 @@ public class Session {
         this.oppsummering = oppsummering;
         this.beskrivelse = beskrivelse;
         this.videoUri = videoUri;
+        this.rom = rom;
     }
 
     public SessionId getId() {
@@ -77,5 +80,9 @@ public class Session {
 
     public Optional<URI> getVideoUri() {
         return videoUri;
+    }
+
+    public String getRom() {
+        return rom;
     }
 }

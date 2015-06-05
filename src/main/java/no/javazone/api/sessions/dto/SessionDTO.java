@@ -13,6 +13,7 @@ public class SessionDTO {
     public final String sprak;
     public final String niva;
     public final List<LinkDTO> links;
+    public final String rom;
 
     public SessionDTO(
             String tittel,
@@ -22,7 +23,8 @@ public class SessionDTO {
             List<ForedragsholderDTO> foredragsholdere,
             String sprak,
             String niva,
-            List<LinkDTO> links
+            List<LinkDTO> links,
+            String rom
     ) {
         this.tittel = tittel;
         this.format = format;
@@ -32,6 +34,7 @@ public class SessionDTO {
         this.sprak = sprak;
         this.niva = niva;
         this.links = links;
+        this.rom = rom;
     }
 
 
@@ -45,6 +48,7 @@ public class SessionDTO {
         this.sprak = null;
         this.niva = null;
         this.links = null;
+        this.rom = null;
     }
 
 

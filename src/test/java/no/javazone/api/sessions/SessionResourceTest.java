@@ -65,7 +65,8 @@ public class SessionResourceTest {
                 "awesome",
                 "Awesome",
                 "Awesome",
-                Optional.empty());
+                Optional.empty(),
+                "Room 7");
         events.add(new Event(Lists.newArrayList(sessions), "test-event-slug"));
         return events;
     }

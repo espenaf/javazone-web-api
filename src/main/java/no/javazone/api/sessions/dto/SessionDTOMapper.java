@@ -25,7 +25,8 @@ public class SessionDTOMapper {
                         toForedragsholderDTO(session.getForedragsholdere()),
                         session.getSprak(),
                         session.getNiva(),
-                        createLinks(contextPath, session)))
+                        createLinks(contextPath, session),
+                        session.getRom()))
                 .collect(Collectors.toList());
     }
 

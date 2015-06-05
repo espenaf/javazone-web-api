@@ -112,7 +112,8 @@ public class EmsAdapter {
                 mapItemProperty(item, "level"),
                 mapItemProperty(item, "summary"),
                 mapItemProperty(item, "body"),
-                mapLink(item, "alternate video"));
+                mapLink(item, "alternate video"),
+                mapLinkPrompt(item, "room item"));
     }
 
     private static List<Foredragsholder> getForedragsholdere(Optional<Link> link) {
@@ -146,6 +147,12 @@ public class EmsAdapter {
         return item.propertyByName(propertyName)
                 .flatMap(Property::getValue)
                 .map(Value::asString)
+                .orElse(null);
+    }
+
+    private static String mapLinkPrompt(Item item, String rel) {
+        return item.linkByRel(rel)
+                .flatMap(Link::getPrompt)
                 .orElse(null);
     }
 
