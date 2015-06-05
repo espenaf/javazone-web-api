@@ -2,6 +2,7 @@ package no.javazone.api.sessions.dto;
 
 import no.javazone.api.links.LinkDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SessionDTO {
@@ -14,6 +15,7 @@ public class SessionDTO {
     public final String niva;
     public final List<LinkDTO> links;
     public final String rom;
+    public final List<String> nokkelord;
 
     public SessionDTO(
             String tittel,
@@ -24,7 +26,8 @@ public class SessionDTO {
             String sprak,
             String niva,
             List<LinkDTO> links,
-            String rom
+            String rom,
+            List<String> nokkelord
     ) {
         this.tittel = tittel;
         this.format = format;
@@ -35,6 +38,7 @@ public class SessionDTO {
         this.niva = niva;
         this.links = links;
         this.rom = rom;
+        this.nokkelord = nokkelord;
     }
 
 
@@ -49,6 +53,7 @@ public class SessionDTO {
         this.niva = null;
         this.links = null;
         this.rom = null;
+        this.nokkelord = new ArrayList<>();
     }
 
 

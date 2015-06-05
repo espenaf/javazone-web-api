@@ -15,6 +15,7 @@ public class SessionDetaljerDTO {
     public final List<ForedragsholderDetaljerDTO> foredragsholdere;
     public final List<LinkDTO> links;
     public final String rom;
+    public final List<String> nokkelord;
 
     public SessionDetaljerDTO(
             String tittel,
@@ -25,7 +26,8 @@ public class SessionDetaljerDTO {
             String beskrivelse,
             List<ForedragsholderDetaljerDTO> foredragsholdere,
             List<LinkDTO> links,
-            String rom
+            String rom,
+            List<String> nokkelord
     ) {
         this.tittel = tittel;
         this.starter = starter;
@@ -36,6 +38,7 @@ public class SessionDetaljerDTO {
         this.foredragsholdere = foredragsholdere;
         this.links = links;
         this.rom = rom;
+        this.nokkelord = nokkelord;
     }
 
     private SessionDetaljerDTO() {
@@ -48,6 +51,7 @@ public class SessionDetaljerDTO {
         this.foredragsholdere = new ArrayList<>();
         this.links = new ArrayList<>();
         this.rom = null;
+        this.nokkelord = new ArrayList<>();
     }
 
 }

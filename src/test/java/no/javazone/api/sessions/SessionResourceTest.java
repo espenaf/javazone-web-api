@@ -13,6 +13,7 @@ import org.junit.Test;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,7 +67,8 @@ public class SessionResourceTest {
                 "Awesome",
                 "Awesome",
                 Optional.empty(),
-                "Room 7");
+                "Room 7",
+                Arrays.asList("Knowledge talk"));
         events.add(new Event(Lists.newArrayList(sessions), "test-event-slug"));
         return events;
     }

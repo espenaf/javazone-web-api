@@ -12,6 +12,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -113,7 +114,8 @@ public class EmsAdapter {
                 mapItemProperty(item, "summary"),
                 mapItemProperty(item, "body"),
                 mapLink(item, "alternate video"),
-                mapLinkPrompt(item, "room item"));
+                mapLinkPrompt(item, "room item"),
+                mapItemTilNokkelord(item));
     }
 
     private static List<Foredragsholder> getForedragsholdere(Optional<Link> link) {
@@ -160,5 +162,16 @@ public class EmsAdapter {
         return item.linkByRel(rel)
                 .map(link -> Optional.of(link.getHref()))
                 .orElse(Optional.empty());
+    }
+
+    private static List<String> mapItemTilNokkelord(Item item) {
+        return item
+                .propertyByName("keywords")
+                .map(Property::getArray)
+                .map(list -> list.stream()
+                        .filter(Value::isString)
+                        .map(Value::asString)
+                        .collect(Collectors.toList()))
+                .orElse(new ArrayList<>());
     }
 }

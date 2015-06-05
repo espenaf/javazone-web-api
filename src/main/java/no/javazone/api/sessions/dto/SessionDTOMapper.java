@@ -26,7 +26,8 @@ public class SessionDTOMapper {
                         session.getSprak(),
                         session.getNiva(),
                         createLinks(contextPath, session),
-                        session.getRom()))
+                        session.getRom(),
+                        session.getNokkelord()))
                 .collect(Collectors.toList());
     }
 
