@@ -1,6 +1,6 @@
 package no.javazone.api.sessions.dto;
 
-import no.javazone.api.LinkDTO;
+import no.javazone.api.links.LinkDTO;
 
 import java.util.List;
 

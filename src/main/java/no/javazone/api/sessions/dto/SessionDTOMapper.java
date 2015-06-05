@@ -1,6 +1,7 @@
 package no.javazone.api.sessions.dto;
 
-import no.javazone.api.LinkDTO;
+import no.javazone.api.links.LinkDTO;
+import no.javazone.api.links.LinkDTOMapper;
 import no.javazone.sessions.Event;
 import no.javazone.sessions.Foredragsholder;
 import no.javazone.sessions.Session;
@@ -40,15 +41,9 @@ public class SessionDTOMapper {
         ArrayList<LinkDTO> links = new ArrayList<>();
 
         links.add(createDetaljerLink(session, contextPath));
-        links.add(createVideoLink(session));
+        links.add(LinkDTOMapper.toLinkDTO("video", session.getVideoUri()));
 
         return links;
-    }
-
-    private static LinkDTO createVideoLink(Session session) {
-        return session.getVideoUri()
-                .map(videoUri -> new LinkDTO("video", videoUri))
-                .orElse(null);
     }
 
     private static LinkDTO createDetaljerLink(Session session, URI contextPath) {

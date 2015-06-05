@@ -1,7 +1,10 @@
 package no.javazone.api.sessions.dto;
 
+import no.javazone.api.links.LinkDTO;
+import no.javazone.api.links.LinkDTOMapper;
 import no.javazone.sessions.Session;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,7 +17,8 @@ public class SessionDetaljerDTOMapper {
                 session.getNiva(),
                 session.getOppsummering(),
                 session.getBeskrivelse(),
-                mapToForedragsholderDetaljerDTOs(session));
+                mapToForedragsholderDetaljerDTOs(session),
+                createLinks(session));
     }
 
     private static List<ForedragsholderDetaljerDTO> mapToForedragsholderDetaljerDTOs(Session session) {
@@ -25,4 +29,13 @@ public class SessionDetaljerDTOMapper {
                         foredragsholder.getBio()))
                 .collect(Collectors.toList());
     }
+
+    private static List<LinkDTO> createLinks(Session session) {
+        ArrayList<LinkDTO> links = new ArrayList<>();
+
+        links.add(LinkDTOMapper.toLinkDTO("video", session.getVideoUri()));
+
+        return links;
+    }
+
 }

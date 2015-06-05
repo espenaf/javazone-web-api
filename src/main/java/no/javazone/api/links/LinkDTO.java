@@ -1,4 +1,4 @@
-package no.javazone.api;
+package no.javazone.api.links;
 
 import java.net.URI;
 

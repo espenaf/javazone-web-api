@@ -1,5 +1,7 @@
 package no.javazone.api.sessions.dto;
 
+import no.javazone.api.links.LinkDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,7 @@ public class SessionDetaljerDTO {
     public final String oppsummering;
     public final String beskrivelse;
     public final List<ForedragsholderDetaljerDTO> foredragsholdere;
+    public final List<LinkDTO> links;
 
     public SessionDetaljerDTO(
             String tittel,
@@ -19,7 +22,8 @@ public class SessionDetaljerDTO {
             String niva,
             String oppsummering,
             String beskrivelse,
-            List<ForedragsholderDetaljerDTO> foredragsholdere
+            List<ForedragsholderDetaljerDTO> foredragsholdere,
+            List<LinkDTO> links
     ) {
         this.tittel = tittel;
         this.starter = starter;
@@ -28,6 +32,7 @@ public class SessionDetaljerDTO {
         this.oppsummering = oppsummering;
         this.beskrivelse = beskrivelse;
         this.foredragsholdere = foredragsholdere;
+        this.links = links;
     }
 
     private SessionDetaljerDTO() {
@@ -38,6 +43,7 @@ public class SessionDetaljerDTO {
         this.oppsummering = null;
         this.beskrivelse = null;
         this.foredragsholdere = new ArrayList<>();
+        this.links = new ArrayList<>();
     }
 
 }
