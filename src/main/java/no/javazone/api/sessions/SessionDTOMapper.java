@@ -35,15 +35,24 @@ class SessionDTOMapper {
                 session.getSlot().getStopper(),
                 session.getNiva(),
                 session.getOppsummering(),
-                session.getBeskrivelse());
+                session.getBeskrivelse(),
+                mapToForedragsholderDetaljerDTOs(session));
+    }
+
+    private static List<ForedragsholderDetaljerDTO> mapToForedragsholderDetaljerDTOs(Session session) {
+        return session.getForedragsholdere()
+                .stream()
+                .map(foredragsholder -> new ForedragsholderDetaljerDTO(
+                        foredragsholder.getNavn(),
+                        foredragsholder.getBio()))
+                .collect(Collectors.toList());
     }
 
     private static List<ForedragsholderDTO> toForedragsholderDTO(List<Foredragsholder> foredragsholdere) {
         return foredragsholdere
                 .stream()
                 .map(foredragsholder -> new ForedragsholderDTO(
-                        foredragsholder.getNavn(),
-                        foredragsholder.getBio()))
+                        foredragsholder.getNavn()))
                 .collect(Collectors.toList());
     }
 
