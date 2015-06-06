@@ -41,7 +41,6 @@ public class SessionDTO {
         this.nokkelord = nokkelord;
     }
 
-
     private SessionDTO() {
         // For (de)serialization
         this.tittel = null;
@@ -55,6 +54,5 @@ public class SessionDTO {
         this.rom = null;
         this.nokkelord = new ArrayList<>();
     }
-
 
 }

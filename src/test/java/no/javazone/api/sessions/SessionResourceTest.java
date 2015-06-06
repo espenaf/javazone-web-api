@@ -68,7 +68,8 @@ public class SessionResourceTest {
                 "Awesome",
                 Optional.empty(),
                 "Room 7",
-                Arrays.asList("Knowledge talk"));
+                Arrays.asList("Knowledge talk"),
+                "For alle");
         events.add(new Event(Lists.newArrayList(sessions), "test-event-slug"));
         return events;
     }

@@ -115,7 +115,8 @@ public class EmsAdapter {
                 mapItemProperty(item, "body"),
                 mapLink(item, "alternate video"),
                 mapLinkPrompt(item, "room item"),
-                mapItemTilNokkelord(item));
+                mapItemTilNokkelord(item),
+                mapItemProperty(item, "audience"));
     }
 
     private static List<Foredragsholder> getForedragsholdere(Optional<Link> link) {
