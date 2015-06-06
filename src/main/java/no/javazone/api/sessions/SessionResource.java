@@ -1,5 +1,6 @@
 package no.javazone.api.sessions;
 
+import io.dropwizard.jersey.caching.CacheControl;
 import no.javazone.api.sessions.dto.SessionDTOMapper;
 import no.javazone.api.sessions.dto.SessionDetaljerDTOMapper;
 import no.javazone.http.PathResolver;
@@ -17,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Path("/event/{eventId}/sessions")
 @Produces(MediaType.APPLICATION_JSON)
@@ -34,6 +36,7 @@ public class SessionResource {
     }
 
     @GET
+    @CacheControl(maxAge = 5, maxAgeUnit = TimeUnit.MINUTES)
     public Response getSessions(@PathParam("eventId") String eventSlug) {
         Optional<Event> eventOptional = sessionRepository.getSessions(eventSlug);
 
@@ -45,6 +48,7 @@ public class SessionResource {
 
     @GET
     @Path("/{sessionId}")
+    @CacheControl(maxAge = 5, maxAgeUnit = TimeUnit.MINUTES)
     public Response getSession(
             @PathParam("eventId") String eventSlug,
             @PathParam("sessionId") String sessionId
