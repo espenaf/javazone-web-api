@@ -46,7 +46,10 @@ public class JavaZoneWebApiApplication extends Application<JavaZoneWebApiConfigu
         final URI contextPath = getContextPath();
         final PathResolver pathResolver = new PathResolver(contextPath);
 
-        final EmsAdapter emsAdapter = new EmsAdapter(configuration.getEmsHost());
+        final String emsHost = getEmsHost(configuration);
+        LOG.info("Bruker EMS-host: " + emsHost);
+
+        final EmsAdapter emsAdapter = new EmsAdapter(emsHost);
 
         final SessionRepository sessionRepository = new SessionRepository(emsAdapter);
 
@@ -56,6 +59,16 @@ public class JavaZoneWebApiApplication extends Application<JavaZoneWebApiConfigu
         environment.jersey().register(new SessionResource(pathResolver, sessionRepository));
 
         environment.healthChecks().register("ems", new EmsHealthCheck(emsAdapter));
+    }
+
+    private String getEmsHost(JavaZoneWebApiConfiguration configuration) {
+        Map<String, String> environmentVariables = System.getenv();
+        String emsHost = environmentVariables.get("EMS_HOST");
+        if (emsHost != null) {
+            return emsHost;
+        } else {
+            return configuration.getEmsHost();
+        }
     }
 
     private URI getContextPath() {
