@@ -16,13 +16,17 @@ public class SessionIdMapper {
     private static final Logger LOG = LoggerFactory.getLogger(SessionIdMapper.class);
 
     public static SessionId generateId(final Item item) {
+        String idAsString = generateIdString(item);
+        return new SessionId(idAsString);
+    }
+
+    public static String generateIdString(Item item) {
         Optional<URI> uriOptional = item.getHref();
         if (!uriOptional.isPresent()) {
             throw new IllegalStateException("manglet href");
         }
         URI href = uriOptional.get();
-        String idAsString = new String(Hex.encodeHex(getMda().digest(href.toString().getBytes())));
-        return new SessionId(idAsString);
+        return new String(Hex.encodeHex(getMda().digest(href.toString().getBytes())));
     }
 
     private static MessageDigest getMda() {

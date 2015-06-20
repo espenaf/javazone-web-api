@@ -2,9 +2,7 @@ package no.javazone.ems;
 
 import net.hamnaberg.json.*;
 import net.hamnaberg.json.parser.CollectionParser;
-import no.javazone.sessions.Event;
-import no.javazone.sessions.Foredragsholder;
-import no.javazone.sessions.Session;
+import no.javazone.sessions.*;
 import org.glassfish.jersey.client.ClientProperties;
 
 import javax.ws.rs.client.Client;
@@ -121,7 +119,7 @@ public class EmsAdapter {
 
     private static List<Foredragsholder> getForedragsholdere(Optional<Link> link) {
         if (link.isPresent()) {
-            WebTarget webTarget = ClientBuilder.newClient()
+            WebTarget webTarget = ClientBuilder.newClient() // TODO: FYYYYY. Ikke lag ny klient hver gang
                     .target(link.get().getHref());
             String response = webTarget.request().buildGet().invoke(String.class);
 
@@ -141,9 +139,26 @@ public class EmsAdapter {
     }
 
     private static Foredragsholder mapItemTilForedragsholder(Item item) {
+        String speakerId = SessionIdMapper.generateIdString(item);
         return new Foredragsholder(
+                speakerId,
                 mapItemProperty(item, "name"),
-                mapItemProperty(item, "bio"));
+                mapItemProperty(item, "bio"),
+                mapItemLink(item, "photo"),
+                getGravatarUrl(item)
+        );
+    }
+
+
+    public static Optional<URI> getGravatarUrl(Item item) {
+        Optional<Link> link = item.findLink(x -> x.getRel().equals("thumbnail") && x.getHref().toString().contains("gravatar"));
+        return link.map(x -> x.getHref().toString().replaceAll("\\?.*", ""))
+                .map(URI::create);
+    }
+
+    private static Optional<URI> mapItemLink(Item item, String relName) {
+        return item.linkByRel(relName)
+                .map(Link::getHref);
     }
 
     private static String mapItemProperty(Item item, String propertyName) {

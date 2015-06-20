@@ -10,12 +10,15 @@ import no.javazone.http.AddCorsHeaderToResponse;
 import no.javazone.http.PathResolver;
 import no.javazone.sessions.SessionRepository;
 import no.javazone.sessions.SessionsCacheRefreshScheduler;
+import no.javazone.speaker.SpeakerImageCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import no.javazone.speaker.SpeakerResource;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.Optional;
 
 public class JavaZoneWebApiApplication extends Application<JavaZoneWebApiConfiguration> {
 
@@ -51,35 +54,29 @@ public class JavaZoneWebApiApplication extends Application<JavaZoneWebApiConfigu
 
         final EmsAdapter emsAdapter = new EmsAdapter(emsHost);
 
-        final SessionRepository sessionRepository = new SessionRepository(emsAdapter);
+        SpeakerImageCache speakerImageCache = new SpeakerImageCache();
+        final SessionRepository sessionRepository = new SessionRepository(emsAdapter, speakerImageCache);
 
         new SessionsCacheRefreshScheduler(sessionRepository).schedule();
 
         environment.jersey().register(new AddCorsHeaderToResponse());
         environment.jersey().register(new SessionResource(pathResolver, sessionRepository));
-
+        environment.jersey().register(new SpeakerResource(speakerImageCache));
         environment.healthChecks().register("ems", new EmsHealthCheck(emsAdapter));
     }
 
     private String getEmsHost(JavaZoneWebApiConfiguration configuration) {
         Map<String, String> environmentVariables = System.getenv();
-        String emsHost = environmentVariables.get("EMS_HOST");
-        if (emsHost != null) {
-            return emsHost;
-        } else {
-            return configuration.getEmsHost();
-        }
+
+        return Optional.ofNullable(environmentVariables.get("EMS_HOST"))
+                .orElse(configuration.getEmsHost());
     }
 
     private URI getContextPath() {
         Map<String, String> environmentVariables = System.getenv();
-        String contextPath = environmentVariables.get("CONTEXT_PATH");
-
-        if (contextPath != null) {
-            return createUriFromString(contextPath);
-        } else {
-            return createUriFromString("http://localhost:9002/");
-        }
+        return Optional.ofNullable(environmentVariables.get("CONTEXT_PATH"))
+                .map(this::createUriFromString)
+                .orElse(createUriFromString("http://localhost:9002/"));
     }
 
     private URI createUriFromString(String contextPath) {
