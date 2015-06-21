@@ -16,6 +16,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static no.javazone.ems.ItemMappers.mapItemLink;
+import static no.javazone.ems.ItemMappers.mapPropertyToString;
+
 public class EmsAdapter {
 
     private static final int CONNECT_TIMOUT_IN_MILLISECONDS = 30 * 1000;
@@ -87,7 +90,7 @@ public class EmsAdapter {
     private EventMinimal mapItemToEventMinimal(Item item) {
         return new EventMinimal(
                 item.getHref().get(),
-                ItemMappers.mapPropertyToString(item, "slug"));
+                mapPropertyToString(item, "slug"));
     }
 
     private Event mapToEvent(Collection collection, String slug) throws IOException {
@@ -102,18 +105,18 @@ public class EmsAdapter {
     private Session mapItemTilForedrag(Item item) {
         return new Session(
                 SessionIdMapper.generateId(item),
-                ItemMappers.mapPropertyToString(item, "title"),
-                ItemMappers.mapPropertyToString(item, "format"),
+                mapPropertyToString(item, "title"),
+                mapPropertyToString(item, "format"),
                 SlotMapper.mapToSlot(item),
                 getForedragsholdere(item.linkByRel("speaker collection")),
-                ItemMappers.mapPropertyToString(item, "lang"),
-                ItemMappers.mapPropertyToString(item, "level"),
-                ItemMappers.mapPropertyToString(item, "summary"),
-                ItemMappers.mapPropertyToString(item, "body"),
+                mapPropertyToString(item, "lang"),
+                mapPropertyToString(item, "level"),
+                mapPropertyToString(item, "summary"),
+                mapPropertyToString(item, "body"),
                 ItemMappers.mapLink(item, "alternate video"),
                 ItemMappers.mapLinkPrompt(item, "room item"),
                 ItemMappers.mapPropertyToList(item, "keywords"),
-                ItemMappers.mapPropertyToString(item, "audience"));
+                mapPropertyToString(item, "audience"));
     }
 
     private List<Foredragsholder> getForedragsholdere(Optional<Link> link) {
@@ -127,7 +130,7 @@ public class EmsAdapter {
                 return collection
                         .getItems()
                         .stream()
-                        .map(EmsAdapter::mapItemTilForedragsholder)
+                        .map(EmsForedragsholderMapper::mapItemTilForedragsholder)
                         .collect(Collectors.toList());
             } catch (IOException e) {
                 throw new RuntimeException("Finner ikke speakers");
@@ -135,24 +138,6 @@ public class EmsAdapter {
         } else {
             throw new RuntimeException("Speakerlink finnes ikke");
         }
-    }
-
-    private static Foredragsholder mapItemTilForedragsholder(Item item) {
-        String speakerId = SessionIdMapper.generateIdString(item);
-        return new Foredragsholder(
-                speakerId,
-                ItemMappers.mapPropertyToString(item, "name"),
-                ItemMappers.mapPropertyToString(item, "bio"),
-                ItemMappers.mapItemLink(item, "photo"),
-                getGravatarUrl(item)
-        );
-    }
-
-
-    public static Optional<URI> getGravatarUrl(Item item) {
-        Optional<Link> link = item.findLink(x -> x.getRel().equals("thumbnail") && x.getHref().toString().contains("gravatar"));
-        return link.map(x -> x.getHref().toString().replaceAll("\\?.*", ""))
-                .map(URI::create);
     }
 
 }
