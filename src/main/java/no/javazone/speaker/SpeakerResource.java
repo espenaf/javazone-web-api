@@ -21,7 +21,7 @@ public class SpeakerResource {
         if (speakerBilde == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        if (Integer.parseInt(size) > SpeakerBilde.SMALL) {
+        if (size != null && Integer.parseInt(size) > SpeakerBilde.SMALL) {
             return Response.ok(speakerBilde.getStortBilde()).build();
         } else {
             return Response.ok(speakerBilde.getLiteBilde()).build();
