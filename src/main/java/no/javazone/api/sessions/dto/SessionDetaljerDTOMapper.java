@@ -4,12 +4,13 @@ import no.javazone.api.links.LinkDTO;
 import no.javazone.api.links.LinkDTOMapper;
 import no.javazone.sessions.Session;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class SessionDetaljerDTOMapper {
-    public static SessionDetaljerDTO toSessionDetaljerDTO(Session session) {
+    public static SessionDetaljerDTO toSessionDetaljerDTO(Session session, URI contextRoot) {
         return new SessionDetaljerDTO(
                 session.getTittel(),
                 session.getSlot().getStarter(),
@@ -17,19 +18,21 @@ public class SessionDetaljerDTOMapper {
                 session.getNiva(),
                 session.getOppsummering(),
                 session.getBeskrivelse(),
-                mapToForedragsholderDetaljerDTOs(session),
+                mapToForedragsholderDetaljerDTOs(session, contextRoot),
                 createLinks(session),
                 session.getRom(),
                 session.getNokkelord(),
                 session.getTiltenktPublikum());
     }
 
-    private static List<ForedragsholderDetaljerDTO> mapToForedragsholderDetaljerDTOs(Session session) {
+    private static List<ForedragsholderDetaljerDTO> mapToForedragsholderDetaljerDTOs(
+            Session session, URI contextRoot) {
         return session.getForedragsholdere()
                 .stream()
                 .map(foredragsholder -> new ForedragsholderDetaljerDTO(
                         foredragsholder.getNavn(),
-                        foredragsholder.getBio()))
+                        foredragsholder.getBio(),
+                        SpeakerBildeUriCreator.createBildeUrl(foredragsholder, contextRoot)))
                 .collect(Collectors.toList());
     }
 

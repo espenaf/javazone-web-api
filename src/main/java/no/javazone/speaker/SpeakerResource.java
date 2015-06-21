@@ -14,7 +14,9 @@ public class SpeakerResource {
 
     @GET
     @Produces("image/png")
-    public Response getImage(@PathParam("speakerId") String speakerId, @QueryParam("s") final String size) {
+    public Response getImage(
+            @PathParam("speakerId") String speakerId,
+            @QueryParam("size") final String size) {
         SpeakerBilde speakerBilde = speakerImageCache.get(speakerId);
         if (speakerBilde == null) {
             return Response.status(Response.Status.NOT_FOUND).build();

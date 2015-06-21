@@ -20,7 +20,7 @@ import javax.ws.rs.core.UriInfo;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-@Path("/event/{eventId}/sessions")
+@Path("/events/{eventId}/sessions")
 @Produces(MediaType.APPLICATION_JSON)
 public class SessionResource {
 
@@ -41,7 +41,8 @@ public class SessionResource {
         Optional<Event> eventOptional = sessionRepository.getSessions(eventSlug);
 
         return eventOptional
-            .map(x -> SessionDTOMapper.toSessionDTOs(x, pathResolver.path(uriInfo)))
+            .map(x -> SessionDTOMapper.toSessionDTOs(
+                    x, pathResolver.path(uriInfo), pathResolver.getContextRoot()))
             .map(x -> Response.ok().entity(x).build())
             .orElse(Response.status(503).build());
     }
@@ -55,9 +56,11 @@ public class SessionResource {
     ) {
         Optional<Session> sessionOptional = sessionRepository.getSession(eventSlug, new SessionId(sessionId));
 
-        return sessionOptional.map(SessionDetaljerDTOMapper::toSessionDetaljerDTO)
-            .map(x -> Response.ok().entity(x).build())
-            .orElse(Response.status(503).build());
+        return sessionOptional
+                .map(session -> SessionDetaljerDTOMapper
+                        .toSessionDetaljerDTO(session, pathResolver.getContextRoot()))
+                .map(x -> Response.ok().entity(x).build())
+                .orElse(Response.status(503).build());
 
     }
 

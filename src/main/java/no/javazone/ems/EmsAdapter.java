@@ -23,9 +23,10 @@ public class EmsAdapter {
     private static final int READ_TIMOUT_IN_MILLISECONDS = 30 * 1000;
 
     private final WebTarget emsWebTarget;
+    private final Client client;
 
     public EmsAdapter(String emsHost) {
-        Client client = ClientBuilder.newClient();
+        client = ClientBuilder.newClient();
 
         client.property(ClientProperties.CONNECT_TIMEOUT, CONNECT_TIMOUT_IN_MILLISECONDS);
         client.property(ClientProperties.READ_TIMEOUT, READ_TIMOUT_IN_MILLISECONDS);
@@ -61,8 +62,7 @@ public class EmsAdapter {
     }
 
     private Optional<Event> getEvent(EventMinimal eventMinimal) {
-        WebTarget sessionWebTarget = ClientBuilder
-                .newClient()
+        WebTarget sessionWebTarget = client
                 .target(eventMinimal.getUri())
                 .path("sessions");
 
@@ -95,12 +95,12 @@ public class EmsAdapter {
         List<Session> sessions = collection
                 .getItems()
                 .stream()
-                .map(EmsAdapter::mapItemTilForedrag)
+                .map(this::mapItemTilForedrag)
                 .collect(Collectors.toList());
         return new Event(sessions, slug);
     }
 
-    private static Session mapItemTilForedrag(Item item) {
+    private Session mapItemTilForedrag(Item item) {
         return new Session(
                 SessionIdMapper.generateId(item),
                 mapItemProperty(item, "title"),
@@ -117,9 +117,9 @@ public class EmsAdapter {
                 mapItemProperty(item, "audience"));
     }
 
-    private static List<Foredragsholder> getForedragsholdere(Optional<Link> link) {
+    private List<Foredragsholder> getForedragsholdere(Optional<Link> link) {
         if (link.isPresent()) {
-            WebTarget webTarget = ClientBuilder.newClient() // TODO: FYYYYY. Ikke lag ny klient hver gang
+            WebTarget webTarget = client
                     .target(link.get().getHref());
             String response = webTarget.request().buildGet().invoke(String.class);
 

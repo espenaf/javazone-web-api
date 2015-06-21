@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SessionDTOMapper {
-    public static List<SessionDTO> toSessionDTOs(Event event, URI contextPath) {
+    public static List<SessionDTO> toSessionDTOs(Event event, URI contextPath, URI contextRoot) {
         return event
                 .getSessions()
                 .stream()
@@ -22,7 +22,7 @@ public class SessionDTOMapper {
                         session.getFormat(),
                         session.getSlot().getStarter(),
                         session.getSlot().getStopper(),
-                        toForedragsholderDTO(session.getForedragsholdere()),
+                        toForedragsholderDTO(session.getForedragsholdere(), contextRoot),
                         session.getSprak(),
                         session.getNiva(),
                         createLinks(contextPath, session),
@@ -31,11 +31,15 @@ public class SessionDTOMapper {
                 .collect(Collectors.toList());
     }
 
-    private static List<ForedragsholderDTO> toForedragsholderDTO(List<Foredragsholder> foredragsholdere) {
+    private static List<ForedragsholderDTO> toForedragsholderDTO(
+            List<Foredragsholder> foredragsholdere,
+            URI contextRoot)
+    {
         return foredragsholdere
                 .stream()
                 .map(foredragsholder -> new ForedragsholderDTO(
-                        foredragsholder.getNavn()))
+                        foredragsholder.getNavn(),
+                        SpeakerBildeUriCreator.createBildeUrl(foredragsholder, contextRoot)))
                 .collect(Collectors.toList());
     }
 
