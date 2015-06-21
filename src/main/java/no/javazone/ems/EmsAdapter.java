@@ -1,23 +1,26 @@
 package no.javazone.ems;
 
-import net.hamnaberg.json.*;
+import net.hamnaberg.json.Collection;
+import net.hamnaberg.json.Item;
+import net.hamnaberg.json.Link;
 import net.hamnaberg.json.parser.CollectionParser;
-import no.javazone.sessions.*;
+import no.javazone.sessions.Event;
+import no.javazone.sessions.Foredragsholder;
+import no.javazone.sessions.Session;
+import no.javazone.sessions.SessionId;
 import org.glassfish.jersey.client.ClientProperties;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import java.io.IOException;
-import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static no.javazone.ems.ItemMappers.mapItemLink;
-import static no.javazone.ems.ItemMappers.mapPropertyToString;
+import static no.javazone.ems.ItemMappers.*;
 
 public class EmsAdapter {
 
@@ -104,7 +107,7 @@ public class EmsAdapter {
 
     private Session mapItemTilForedrag(Item item) {
         return new Session(
-                SessionIdMapper.generateId(item),
+                new SessionId(generateIdString(item)),
                 mapPropertyToString(item, "title"),
                 mapPropertyToString(item, "format"),
                 SlotMapper.mapToSlot(item),
@@ -113,9 +116,9 @@ public class EmsAdapter {
                 mapPropertyToString(item, "level"),
                 mapPropertyToString(item, "summary"),
                 mapPropertyToString(item, "body"),
-                ItemMappers.mapLink(item, "alternate video"),
-                ItemMappers.mapLinkPrompt(item, "room item"),
-                ItemMappers.mapPropertyToList(item, "keywords"),
+                mapLink(item, "alternate video"),
+                mapLinkPrompt(item, "room item"),
+                mapPropertyToList(item, "keywords"),
                 mapPropertyToString(item, "audience"));
     }
 
