@@ -10,7 +10,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -88,7 +87,7 @@ public class EmsAdapter {
     private EventMinimal mapItemToEventMinimal(Item item) {
         return new EventMinimal(
                 item.getHref().get(),
-                mapItemProperty(item, "slug"));
+                ItemMappers.mapPropertyToString(item, "slug"));
     }
 
     private Event mapToEvent(Collection collection, String slug) throws IOException {
@@ -103,18 +102,18 @@ public class EmsAdapter {
     private Session mapItemTilForedrag(Item item) {
         return new Session(
                 SessionIdMapper.generateId(item),
-                mapItemProperty(item, "title"),
-                mapItemProperty(item, "format"),
+                ItemMappers.mapPropertyToString(item, "title"),
+                ItemMappers.mapPropertyToString(item, "format"),
                 SlotMapper.mapToSlot(item),
                 getForedragsholdere(item.linkByRel("speaker collection")),
-                mapItemProperty(item, "lang"),
-                mapItemProperty(item, "level"),
-                mapItemProperty(item, "summary"),
-                mapItemProperty(item, "body"),
-                mapLink(item, "alternate video"),
-                mapLinkPrompt(item, "room item"),
-                mapItemTilNokkelord(item),
-                mapItemProperty(item, "audience"));
+                ItemMappers.mapPropertyToString(item, "lang"),
+                ItemMappers.mapPropertyToString(item, "level"),
+                ItemMappers.mapPropertyToString(item, "summary"),
+                ItemMappers.mapPropertyToString(item, "body"),
+                ItemMappers.mapLink(item, "alternate video"),
+                ItemMappers.mapLinkPrompt(item, "room item"),
+                ItemMappers.mapPropertyToList(item, "keywords"),
+                ItemMappers.mapPropertyToString(item, "audience"));
     }
 
     private List<Foredragsholder> getForedragsholdere(Optional<Link> link) {
@@ -142,9 +141,9 @@ public class EmsAdapter {
         String speakerId = SessionIdMapper.generateIdString(item);
         return new Foredragsholder(
                 speakerId,
-                mapItemProperty(item, "name"),
-                mapItemProperty(item, "bio"),
-                mapItemLink(item, "photo"),
+                ItemMappers.mapPropertyToString(item, "name"),
+                ItemMappers.mapPropertyToString(item, "bio"),
+                ItemMappers.mapItemLink(item, "photo"),
                 getGravatarUrl(item)
         );
     }
@@ -156,38 +155,4 @@ public class EmsAdapter {
                 .map(URI::create);
     }
 
-    private static Optional<URI> mapItemLink(Item item, String relName) {
-        return item.linkByRel(relName)
-                .map(Link::getHref);
-    }
-
-    private static String mapItemProperty(Item item, String propertyName) {
-        return item.propertyByName(propertyName)
-                .flatMap(Property::getValue)
-                .map(Value::asString)
-                .orElse(null);
-    }
-
-    private static String mapLinkPrompt(Item item, String rel) {
-        return item.linkByRel(rel)
-                .flatMap(Link::getPrompt)
-                .orElse(null);
-    }
-
-    private static Optional<URI> mapLink(Item item, String rel) {
-        return item.linkByRel(rel)
-                .map(link -> Optional.of(link.getHref()))
-                .orElse(Optional.empty());
-    }
-
-    private static List<String> mapItemTilNokkelord(Item item) {
-        return item
-                .propertyByName("keywords")
-                .map(Property::getArray)
-                .map(list -> list.stream()
-                        .filter(Value::isString)
-                        .map(Value::asString)
-                        .collect(Collectors.toList()))
-                .orElse(new ArrayList<>());
-    }
 }
