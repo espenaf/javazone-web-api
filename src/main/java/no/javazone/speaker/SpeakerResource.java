@@ -1,7 +1,10 @@
 package no.javazone.speaker;
 
+import io.dropwizard.jersey.caching.CacheControl;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.concurrent.TimeUnit;
 
 @Path("/speakers/{speakerId}/image")
 public class SpeakerResource {
@@ -14,6 +17,7 @@ public class SpeakerResource {
 
     @GET
     @Produces("image/png")
+    @CacheControl(maxAge = 5, maxAgeUnit = TimeUnit.MINUTES)
     public Response getImage(
             @PathParam("speakerId") String speakerId,
             @QueryParam("size") final String size) {
