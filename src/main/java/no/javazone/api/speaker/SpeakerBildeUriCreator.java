@@ -1,4 +1,4 @@
-package no.javazone.api.sessions.dto;
+package no.javazone.api.speaker;
 
 import no.javazone.sessions.Foredragsholder;
 

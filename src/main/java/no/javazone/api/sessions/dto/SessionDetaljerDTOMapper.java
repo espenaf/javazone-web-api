@@ -2,6 +2,7 @@ package no.javazone.api.sessions.dto;
 
 import no.javazone.api.links.LinkDTO;
 import no.javazone.api.links.LinkDTOMapper;
+import no.javazone.api.speaker.SpeakerBildeUriCreator;
 import no.javazone.sessions.Session;
 
 import java.net.URI;

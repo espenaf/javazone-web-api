@@ -13,7 +13,7 @@ import no.javazone.sessions.SessionsCacheRefreshScheduler;
 import no.javazone.speaker.SpeakerImageCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import no.javazone.speaker.SpeakerResource;
+import no.javazone.api.speaker.SpeakerResource;
 
 import java.net.URI;
 import java.net.URISyntaxException;

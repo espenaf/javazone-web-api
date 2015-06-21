@@ -1,6 +1,8 @@
-package no.javazone.speaker;
+package no.javazone.api.speaker;
 
 import io.dropwizard.jersey.caching.CacheControl;
+import no.javazone.speaker.SpeakerBilde;
+import no.javazone.speaker.SpeakerImageCache;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
