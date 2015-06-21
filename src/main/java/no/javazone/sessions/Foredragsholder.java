@@ -10,7 +10,12 @@ public class Foredragsholder {
     private final URI gravatarUri;
     private final URI photoUri;
 
-    public Foredragsholder(String speakerId, String navn, String bio, Optional<URI> photoUri, Optional<URI> gravatarUri) {
+    public Foredragsholder(
+            String speakerId,
+            String navn,
+            String bio,
+            Optional<URI> photoUri,
+            Optional<URI> gravatarUri) {
         this.speakerId = speakerId;
         this.navn = navn;
         this.bio = bio;
@@ -36,16 +41,6 @@ public class Foredragsholder {
 
     public Optional<URI> getGravatarUri() {
         return Optional.ofNullable(gravatarUri);
-    }
-
-    public Optional<URI> getPublicPhoto() {
-        if (getPhotoUri().isPresent()) {
-            return getPhotoUri();
-        }
-        if (getGravatarUri().isPresent()) {
-            return getGravatarUri();
-        }
-        return Optional.empty();
     }
 
 }
