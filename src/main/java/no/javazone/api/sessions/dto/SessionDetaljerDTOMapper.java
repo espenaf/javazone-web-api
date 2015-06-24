@@ -23,7 +23,9 @@ public class SessionDetaljerDTOMapper {
                 createLinks(session),
                 session.getRom(),
                 session.getNokkelord(),
-                session.getTiltenktPublikum());
+                session.getTiltenktPublikum(),
+                session.getSprak(),
+                session.getFormat());
     }
 
     private static List<ForedragsholderDetaljerDTO> mapToForedragsholderDetaljerDTOs(

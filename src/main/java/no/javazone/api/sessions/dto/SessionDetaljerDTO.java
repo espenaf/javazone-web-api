@@ -17,6 +17,8 @@ public class SessionDetaljerDTO {
     public final String rom;
     public final List<String> nokkelord;
     public final String tiltenktPublikum;
+    public final String sprak;
+    public final String format;
 
     public SessionDetaljerDTO(
             String tittel,
@@ -29,8 +31,9 @@ public class SessionDetaljerDTO {
             List<LinkDTO> links,
             String rom,
             List<String> nokkelord,
-            String tiltenktPublikum
-    ) {
+            String tiltenktPublikum,
+            String sprak,
+            String format) {
         this.tittel = tittel;
         this.starter = starter;
         this.stopper = stopper;
@@ -42,6 +45,8 @@ public class SessionDetaljerDTO {
         this.rom = rom;
         this.nokkelord = nokkelord;
         this.tiltenktPublikum = tiltenktPublikum;
+        this.sprak = sprak;
+        this.format = format;
     }
 
     private SessionDetaljerDTO() {
@@ -56,6 +61,8 @@ public class SessionDetaljerDTO {
         this.rom = null;
         this.nokkelord = new ArrayList<>();
         this.tiltenktPublikum = null;
+        this.sprak = null;
+        this.format = null;
     }
 
 }
