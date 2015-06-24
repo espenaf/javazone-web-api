@@ -23,4 +23,4 @@ if [ -f $APP_HOME/environment ]; then
   source $APP_HOME/environment
 fi
 
-exec java -jar bin/javazone-web-api*.jar server configuration.yaml
+exec /usr/lib/jvm/java-8-oracle/jre/bin/java -jar bin/javazone-web-api*.jar server configuration.yaml
