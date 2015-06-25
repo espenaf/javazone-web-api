@@ -38,4 +38,7 @@ public class SpeakerBilde {
         return hentet.isBefore(DateTime.now().minusMinutes(CACHELEVETID_MINUTTER));
     }
 
+    public Date getLastModified() {
+        return lastModified;
+    }
 }
