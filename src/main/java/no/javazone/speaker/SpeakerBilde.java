@@ -7,8 +7,8 @@ import java.util.Date;
 public class SpeakerBilde {
     private static final int CACHELEVETID_MINUTTER = 60;
 
-    public static final int SMALL = 36;
-    public static final int LARGE = 400;
+    public static final int SMALL = 48;
+    public static final int LARGE = 240;
 
     private final byte[] smallPhoto;
     private final byte[] largePhoto;
