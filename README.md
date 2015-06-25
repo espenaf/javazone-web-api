@@ -18,3 +18,9 @@ Legg til følgende i settings.xml
 ```
 
 Og kjør mvn deploy
+
+## Release til dev/test/prod
+
+Deploy skjer via provisjoneringen i https://github.com/javaBin/infrastructure
+
+Bruk javazone-web-api.yml-playbooken for å deploye appen.
