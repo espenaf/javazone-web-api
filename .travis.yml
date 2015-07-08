@@ -1,6 +1,12 @@
 language: java
+env:
+  global:
+  - secure: CqP3ccFGaEDv1g/RL+uxIg+UIaELt1wTiFqYg5K3WEDJXepzn/EoP3UY4UOJ9T7Ah3AX7ODGb5+fV4r9DC6b1qN1hA9LjwneGPq+mBJ77GT8DD20czizmpFi+YTdQd6uhflFwFtJurMbjC+TEnt1j128HMoWG1RvIwdJoLvgzUQ=
+  - secure: eZXJ3J7BiZbVJQv8qFw87OmQOEdyQN4oA5dCiMvYvJMY1EEQedvyhwY/x5+kt037fS/qvNv0mdvywHAF9ZQs8YVbdohIpszJOZwsqjmlJ4/u7ANhRfOySTvY8OkBJ2K3fuj7zd3vTEQ87B3Hs1YIYNUO06+V8pW0Sw9UrS0V3Vk=
 jdk:
 - oraclejdk8
+after_success:
+- '[[ $TRAVIS_BRANCH == "master" ]] && { mvn -s ./travis-settings.xml deploy; };'
 notifications:
   slack:
     secure: eOoaUFqUpCjzEDH9V7+FkIxqUCnZ9BG7oEBKiT2JrPZVW/OlKoGP/CdPvgXAxEGou4gBCtVwjH96hzUwQpglgRAo6frLeF2bOM/Cdx7zTqV58KEP0EAUDh9YEe2ZKEpcKTofN2Fntr0Sd662b5XJVQTLm4Rtzwy/+DMdu1eRvOk=
