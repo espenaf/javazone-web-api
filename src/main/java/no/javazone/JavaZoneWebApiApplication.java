@@ -4,6 +4,7 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import no.javazone.api.sessions.SessionResource;
+import no.javazone.devnull.DevNullUriCreator;
 import no.javazone.ems.EmsAdapter;
 import no.javazone.helsesjekk.EmsHealthCheck;
 import no.javazone.http.AddCorsHeaderToResponse;
@@ -53,6 +54,7 @@ public class JavaZoneWebApiApplication extends Application<JavaZoneWebApiConfigu
         LOG.info("Bruker EMS-host: " + emsHost);
 
         final EmsAdapter emsAdapter = new EmsAdapter(emsHost);
+        DevNullUriCreator devNullUriCreator = new DevNullUriCreator("http://" + emsHost + "/devnull/server/events");
 
         SpeakerImageCache speakerImageCache = new SpeakerImageCache();
         final SessionRepository sessionRepository = new SessionRepository(emsAdapter, speakerImageCache);
@@ -60,7 +62,7 @@ public class JavaZoneWebApiApplication extends Application<JavaZoneWebApiConfigu
         new SessionsCacheRefreshScheduler(sessionRepository).schedule();
 
         environment.jersey().register(new AddCorsHeaderToResponse());
-        environment.jersey().register(new SessionResource(pathResolver, sessionRepository));
+        environment.jersey().register(new SessionResource(pathResolver, sessionRepository, devNullUriCreator));
         environment.jersey().register(new SpeakerResource(speakerImageCache));
         environment.healthChecks().register("ems", new EmsHealthCheck(emsAdapter));
     }

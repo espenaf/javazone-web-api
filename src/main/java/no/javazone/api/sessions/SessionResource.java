@@ -27,20 +27,24 @@ public class SessionResource {
 
     private PathResolver pathResolver;
     private SessionRepository sessionRepository;
+    private DevNullUriCreator devNullUriCreator;
 
     @Context
     private UriInfo uriInfo;
 
-    public SessionResource(PathResolver pathResolver, SessionRepository sessionRepository) {
+    public SessionResource(
+            PathResolver pathResolver,
+            SessionRepository sessionRepository,
+            DevNullUriCreator devNullUriCreator) {
         this.pathResolver = pathResolver;
         this.sessionRepository = sessionRepository;
+        this.devNullUriCreator = devNullUriCreator;
     }
 
     @GET
     @CacheControl(maxAge = 5, maxAgeUnit = TimeUnit.MINUTES)
     public Response getSessions(@PathParam("eventId") String eventSlug) {
         Optional<Event> eventOptional = sessionRepository.getSessions(eventSlug);
-        DevNullUriCreator devNullUriCreator = new DevNullUriCreator("");
 
         return eventOptional
             .map(x -> SessionDTOMapper.toSessionDTOs(
@@ -60,7 +64,6 @@ public class SessionResource {
             @PathParam("sessionId") String sessionId
     ) {
         Optional<Session> sessionOptional = sessionRepository.getSession(eventSlug, new SessionId(sessionId));
-        DevNullUriCreator devNullUriCreator = new DevNullUriCreator("");
         return sessionOptional
                 .map(session -> SessionDetaljerDTOMapper
                         .toSessionDetaljerDTO(session, pathResolver.getContextRoot(), devNullUriCreator))

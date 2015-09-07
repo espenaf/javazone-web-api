@@ -3,6 +3,7 @@ package no.javazone.api.sessions;
 import com.google.common.collect.Lists;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import no.javazone.api.sessions.dto.SessionDTO;
+import no.javazone.devnull.DevNullUriCreator;
 import no.javazone.ems.EmsAdapter;
 import no.javazone.http.PathResolver;
 import no.javazone.sessions.*;
@@ -38,7 +39,7 @@ public class SessionResourceTest {
 
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-            .addResource(new SessionResource(pathResolver, sessionRepository))
+            .addResource(new SessionResource(pathResolver, sessionRepository, new DevNullUriCreator("http://localhost")))
             .build();
 
     @Test
