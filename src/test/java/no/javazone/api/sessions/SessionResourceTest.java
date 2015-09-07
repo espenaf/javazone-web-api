@@ -17,6 +17,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -71,7 +72,8 @@ public class SessionResourceTest {
                 Optional.empty(),
                 "Room 7",
                 Arrays.asList("Knowledge talk"),
-                "For alle");
+                "For alle",
+                new EmsIds(UUID.randomUUID(), UUID.randomUUID()));
         events.add(new Event(Lists.newArrayList(sessions), "test-event-slug"));
         return events;
     }

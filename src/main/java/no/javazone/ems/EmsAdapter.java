@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static no.javazone.ems.EmsIdMapper.mapToEmsIds;
 import static no.javazone.ems.ItemMappers.*;
 
 public class EmsAdapter {
@@ -119,7 +120,8 @@ public class EmsAdapter {
                 mapLink(item, "alternate video"),
                 mapLinkPrompt(item, "room item"),
                 mapPropertyToList(item, "keywords"),
-                mapPropertyToString(item, "audience"));
+                mapPropertyToString(item, "audience"),
+                mapToEmsIds(item));
     }
 
     private List<Foredragsholder> getForedragsholdere(Optional<Link> link) {
