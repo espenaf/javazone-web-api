@@ -3,6 +3,7 @@ package no.javazone.api.sessions;
 import io.dropwizard.jersey.caching.CacheControl;
 import no.javazone.api.sessions.dto.SessionDTOMapper;
 import no.javazone.api.sessions.dto.SessionDetaljerDTOMapper;
+import no.javazone.devnull.DevNullUriCreator;
 import no.javazone.http.PathResolver;
 import no.javazone.sessions.Event;
 import no.javazone.sessions.Session;
@@ -26,13 +27,18 @@ public class SessionResource {
 
     private PathResolver pathResolver;
     private SessionRepository sessionRepository;
+    private DevNullUriCreator devNullUriCreator;
 
     @Context
     private UriInfo uriInfo;
 
-    public SessionResource(PathResolver pathResolver, SessionRepository sessionRepository) {
+    public SessionResource(
+            PathResolver pathResolver,
+            SessionRepository sessionRepository,
+            DevNullUriCreator devNullUriCreator) {
         this.pathResolver = pathResolver;
         this.sessionRepository = sessionRepository;
+        this.devNullUriCreator = devNullUriCreator;
     }
 
     @GET
@@ -42,7 +48,10 @@ public class SessionResource {
 
         return eventOptional
             .map(x -> SessionDTOMapper.toSessionDTOs(
-                    x, pathResolver.path(uriInfo), pathResolver.getContextRoot()))
+                    x,
+                    pathResolver.path(uriInfo),
+                    pathResolver.getContextRoot(),
+                    devNullUriCreator))
             .map(x -> Response.ok().entity(x).build())
             .orElse(Response.status(503).build());
     }
@@ -55,10 +64,9 @@ public class SessionResource {
             @PathParam("sessionId") String sessionId
     ) {
         Optional<Session> sessionOptional = sessionRepository.getSession(eventSlug, new SessionId(sessionId));
-
         return sessionOptional
                 .map(session -> SessionDetaljerDTOMapper
-                        .toSessionDetaljerDTO(session, pathResolver.getContextRoot()))
+                        .toSessionDetaljerDTO(session, pathResolver.getContextRoot(), devNullUriCreator))
                 .map(x -> Response.ok().entity(x).build())
                 .orElse(Response.status(503).build());
 

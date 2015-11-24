@@ -3,6 +3,7 @@ package no.javazone.api.sessions;
 import com.google.common.collect.Lists;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import no.javazone.api.sessions.dto.SessionDTO;
+import no.javazone.devnull.DevNullUriCreator;
 import no.javazone.ems.EmsAdapter;
 import no.javazone.http.PathResolver;
 import no.javazone.sessions.*;
@@ -17,6 +18,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -37,7 +39,7 @@ public class SessionResourceTest {
 
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-            .addResource(new SessionResource(pathResolver, sessionRepository))
+            .addResource(new SessionResource(pathResolver, sessionRepository, new DevNullUriCreator("http://localhost")))
             .build();
 
     @Test
@@ -71,7 +73,8 @@ public class SessionResourceTest {
                 Optional.empty(),
                 "Room 7",
                 Arrays.asList("Knowledge talk"),
-                "For alle");
+                "For alle",
+                new EmsIds(UUID.randomUUID(), UUID.randomUUID()));
         events.add(new Event(Lists.newArrayList(sessions), "test-event-slug"));
         return events;
     }

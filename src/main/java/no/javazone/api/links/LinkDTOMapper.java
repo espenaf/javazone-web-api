@@ -4,9 +4,8 @@ import java.net.URI;
 import java.util.Optional;
 
 public class LinkDTOMapper {
-    public static LinkDTO toLinkDTO(String rel, Optional<URI> uriOptional) {
+    public static Optional<LinkDTO> toLinkDTO(String rel, Optional<URI> uriOptional) {
         return uriOptional
-                .map(videoUri -> new LinkDTO(rel, videoUri))
-                .orElse(null);
+                .map(videoUri -> new LinkDTO(rel, videoUri));
     }
 }
