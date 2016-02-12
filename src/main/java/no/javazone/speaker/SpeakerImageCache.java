@@ -1,6 +1,5 @@
 package no.javazone.speaker;
 
-import com.google.common.base.Throwables;
 import no.javazone.sessions.Foredragsholder;
 
 import javax.ws.rs.client.Client;
@@ -16,9 +15,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TimeZone;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
 public class SpeakerImageCache {
 
@@ -30,17 +27,17 @@ public class SpeakerImageCache {
         client = ClientBuilder.newClient();
     }
 
-    public void add(Foredragsholder f) {
+    public void add(Foredragsholder f, NestedTimer timer) {
         Optional<URI> photoUri = f.getPhotoUri();
         if (photoUri.isPresent()) {
-            Response response = time("fetch", () -> fetchImage(f));
+            Response response = timer.time("fetchImage", photoUri.get().toString(), () -> fetchImage(f));
 
             if (response.getStatus() != Response.Status.NOT_MODIFIED.getStatusCode()) {
-                byte[] bbb = response.readEntity(byte[].class);
+                byte[] imageBytes = response.readEntity(byte[].class);
 
-                System.out.println(f.getSpeakerId() + " " + bbb.length + " " + photoUri.get());
+                System.out.println("speakerid=" + f.getSpeakerId() + " bytes=" + imageBytes.length + " photoUri=" + photoUri.get());
 
-                SpeakerBilde speakerBilde = time("convert", () -> new SpeakerBilde(bbb, response.getLastModified()));
+                SpeakerBilde speakerBilde = timer.time("convertImage", photoUri.get().toString(), () -> new SpeakerBilde(imageBytes, response.getLastModified()));
 
                 speakerImageCache.put(f.getSpeakerId(), speakerBilde);
             }
@@ -62,18 +59,6 @@ public class SpeakerImageCache {
         SimpleDateFormat dateFormat = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         return dateFormat.format(date);
-    }
-
-    private static <T> T time(String name, Callable<T> callable) {
-        long start = System.nanoTime();
-        try {
-            return callable.call();
-        } catch (Exception e) {
-            throw Throwables.propagate(e);
-        } finally {
-            long endTime = System.nanoTime();
-            System.out.println(name + " -> " + TimeUnit.NANOSECONDS.toMillis(endTime - start));
-        }
     }
 
     public SpeakerBilde get(String speakerId) {

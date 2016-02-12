@@ -7,6 +7,7 @@ import no.javazone.devnull.DevNullUriCreator;
 import no.javazone.ems.EmsAdapter;
 import no.javazone.http.PathResolver;
 import no.javazone.sessions.*;
+import no.javazone.speaker.NestedTimer;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Ignore;
@@ -46,7 +47,7 @@ public class SessionResourceTest {
     @Ignore("Får NullPointer i SessionRepository")
     public void sessions_returnerer_liste_med_sesjoner() throws Exception {
         List<Event> events = lag_test_sesjon();
-        when(mock.getEvents()).thenReturn(events.stream());
+        when(mock.getEvents(new NestedTimer())).thenReturn(events.stream());
 
         sessionRepository.refresh();
 

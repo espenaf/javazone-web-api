@@ -8,6 +8,7 @@ import no.javazone.sessions.Event;
 import no.javazone.sessions.Foredragsholder;
 import no.javazone.sessions.Session;
 import no.javazone.sessions.SessionId;
+import no.javazone.speaker.NestedTimer;
 import org.glassfish.jersey.client.ClientProperties;
 
 import javax.ws.rs.client.Client;
@@ -40,10 +41,10 @@ public class EmsAdapter {
         emsWebTarget = client.target("http://" + emsHost);
     }
 
-    public Stream<Event> getEvents() {
+    public Stream<Event> getEvents(NestedTimer timer) {
         return getEventUris()
                 .parallelStream()
-                .map(this::getEvent)
+                .map(x -> this.getEvent(x, timer))
                 .filter(Optional::isPresent)
                 .map(Optional::get);
     }
@@ -67,20 +68,23 @@ public class EmsAdapter {
         }
     }
 
-    private Optional<Event> getEvent(EventMinimal eventMinimal) {
-        WebTarget sessionWebTarget = client
+    private Optional<Event> getEvent(EventMinimal eventMinimal, NestedTimer timer) {
+        return timer.time("getEvent", eventMinimal.getSlug(), () -> {
+                WebTarget sessionWebTarget = client
                 .target(eventMinimal.getUri())
                 .path("sessions");
 
-        String response = sessionWebTarget.request().buildGet().invoke(String.class);
+            String response = sessionWebTarget.request().buildGet().invoke(String.class);
 
-        try {
-            Collection collection = new CollectionParser().parse(response);
-            return Optional.of(mapToEvent(collection, eventMinimal.getSlug()));
+            try {
+                Collection collection = new CollectionParser().parse(response);
+                return Optional.of(mapToEvent(collection, eventMinimal.getSlug(), timer));
 
-        } catch (IOException e) {
-            return Optional.empty();
-        }
+            } catch (IOException e) {
+                return Optional.empty();
+            }
+        });
+
     }
 
     private List<EventMinimal> mapToEventMinimals(Collection collection) {
@@ -97,22 +101,22 @@ public class EmsAdapter {
                 mapPropertyToString(item, "slug"));
     }
 
-    private Event mapToEvent(Collection collection, String slug) throws IOException {
+    private Event mapToEvent(Collection collection, String slug, NestedTimer timer) throws IOException {
         List<Session> sessions = collection
                 .getItems()
                 .stream()
-                .map(this::mapItemTilForedrag)
+                .map(x -> this.mapItemTilForedrag(x, timer))
                 .collect(Collectors.toList());
         return new Event(sessions, slug);
     }
 
-    private Session mapItemTilForedrag(Item item) {
+    private Session mapItemTilForedrag(Item item, NestedTimer timer) {
         return new Session(
                 new SessionId(generateIdString(item)),
                 mapPropertyToString(item, "title"),
                 mapPropertyToString(item, "format"),
                 SlotMapper.mapToSlot(item),
-                getForedragsholdere(item.linkByRel("speaker collection")),
+                getForedragsholdere(item.linkByRel("speaker collection"), timer),
                 mapPropertyToString(item, "lang"),
                 mapPropertyToString(item, "level"),
                 mapPropertyToString(item, "summary"),
@@ -124,22 +128,24 @@ public class EmsAdapter {
                 mapToEmsIds(item));
     }
 
-    private List<Foredragsholder> getForedragsholdere(Optional<Link> link) {
+    private List<Foredragsholder> getForedragsholdere(Optional<Link> link, NestedTimer timer) {
         if (link.isPresent()) {
-            WebTarget webTarget = client
-                    .target(link.get().getHref());
-            String response = webTarget.request().buildGet().invoke(String.class);
+            return timer.time("getForedragsholder", null, () -> {
+                WebTarget webTarget = client
+                        .target(link.get().getHref());
+                String response = webTarget.request().buildGet().invoke(String.class);
 
-            try {
-                Collection collection = new CollectionParser().parse(response);
-                return collection
-                        .getItems()
-                        .stream()
-                        .map(EmsForedragsholderMapper::mapItemTilForedragsholder)
-                        .collect(Collectors.toList());
-            } catch (IOException e) {
-                throw new RuntimeException("Finner ikke speakers");
-            }
+                try {
+                    Collection collection = new CollectionParser().parse(response);
+                    return collection
+                            .getItems()
+                            .stream()
+                            .map(EmsForedragsholderMapper::mapItemTilForedragsholder)
+                            .collect(Collectors.toList());
+                } catch (IOException e) {
+                    throw new RuntimeException("Finner ikke speakers");
+                }
+            });
         } else {
             throw new RuntimeException("Speakerlink finnes ikke");
         }

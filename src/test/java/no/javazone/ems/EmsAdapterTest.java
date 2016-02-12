@@ -1,6 +1,7 @@
 package no.javazone.ems;
 
 import no.javazone.sessions.Event;
+import no.javazone.speaker.NestedTimer;
 import org.junit.Test;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public class EmsAdapterTest {
     @Test
     public void should_get_sessions() {
         EmsAdapter emsAdapter = new EmsAdapter("test.javazone.no");
-        List<Event> events = emsAdapter.getEvents().collect(Collectors.toList());
+        List<Event> events = emsAdapter.getEvents(new NestedTimer()).collect(Collectors.toList());
 
         assertThat(events.size()).isGreaterThan(0);
     }
