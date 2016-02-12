@@ -5,6 +5,10 @@ env:
   - secure: eZXJ3J7BiZbVJQv8qFw87OmQOEdyQN4oA5dCiMvYvJMY1EEQedvyhwY/x5+kt037fS/qvNv0mdvywHAF9ZQs8YVbdohIpszJOZwsqjmlJ4/u7ANhRfOySTvY8OkBJ2K3fuj7zd3vTEQ87B3Hs1YIYNUO06+V8pW0Sw9UrS0V3Vk=
 jdk:
 - oraclejdk8
+addons:
+  apt:
+    packages:
+    - oracle-java8-installer
 after_success:
 - '[[ $TRAVIS_BRANCH == "master" ]] && { mvn -s ./travis-settings.xml deploy; };'
 notifications:
