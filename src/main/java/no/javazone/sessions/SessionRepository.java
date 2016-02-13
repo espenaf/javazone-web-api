@@ -56,7 +56,6 @@ public class SessionRepository {
             LOG.info("Caching ferdig");
         } catch (Exception e) {
             LOG.error("Exception under lasting av cache", e);
-            timer.printAggregate();
         } catch (Throwable e) {
             LOG.error("Throwable under lasting av cache", e);
             throw e; // Rethrowing cancels the scheduler.

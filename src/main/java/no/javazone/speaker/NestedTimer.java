@@ -33,7 +33,7 @@ public class NestedTimer {
     }
 
     private static class TimerNode {
-        private List<Long> durations = new ArrayList<>();
+        private final List<Long> durations = new ArrayList<>();
 
         public void addDuration(long durationNanos) {
             durations.add(durationNanos);
@@ -46,7 +46,9 @@ public class NestedTimer {
         public long totalDuration() {
             long sum = 0;
             for (Long duration : durations) {
-                sum += duration;
+                if (duration != null) {
+                    sum += duration;
+                }
             }
             return sum;
         }
