@@ -14,7 +14,7 @@ public class DevNullUriCreator {
 
     public URI mapToUri(EmsIds emsIds) {
         return URI.create(String.format(
-                "%s/%s/%s/feedbacks",
+                "%s/%s/sessions/%s/feedbacks",
                 baseUrl,
                 emsIds.getEventId(),
                 emsIds.getSessionId()));
