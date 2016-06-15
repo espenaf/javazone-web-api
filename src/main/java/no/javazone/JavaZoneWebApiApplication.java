@@ -54,7 +54,7 @@ public class JavaZoneWebApiApplication extends Application<JavaZoneWebApiConfigu
         LOG.info("Bruker EMS-host: " + emsHost);
 
         final EmsAdapter emsAdapter = new EmsAdapter(emsHost);
-        DevNullUriCreator devNullUriCreator = new DevNullUriCreator("http://" + emsHost + "/devnull/server/events");
+        DevNullUriCreator devNullUriCreator = new DevNullUriCreator("https://" + emsHost + "/devnull/server/events");
 
         SpeakerImageCache speakerImageCache = new SpeakerImageCache();
         final SessionRepository sessionRepository = new SessionRepository(emsAdapter, speakerImageCache);

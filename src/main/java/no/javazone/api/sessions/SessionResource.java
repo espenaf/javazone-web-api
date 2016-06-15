@@ -10,14 +10,9 @@ import no.javazone.sessions.Session;
 import no.javazone.sessions.SessionId;
 import no.javazone.sessions.SessionRepository;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
+import java.net.URI;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -43,33 +38,43 @@ public class SessionResource {
 
     @GET
     @CacheControl(maxAge = 5, maxAgeUnit = TimeUnit.MINUTES)
-    public Response getSessions(@PathParam("eventId") String eventSlug) {
+    public Response getSessions(@PathParam("eventId") String eventSlug, @HeaderParam("X-Forwarded-Proto") String forwardedProto) {
         Optional<Event> eventOptional = sessionRepository.getSessions(eventSlug);
+        URI contextRoot = resolveContextRoot(forwardedProto);
 
         return eventOptional
             .map(x -> SessionDTOMapper.toSessionDTOs(
                     x,
                     pathResolver.path(uriInfo),
-                    pathResolver.getContextRoot(),
+                    contextRoot,
                     devNullUriCreator))
             .map(x -> Response.ok().entity(x).build())
             .orElse(Response.status(503).build());
     }
+
 
     @GET
     @Path("/{sessionId}")
     @CacheControl(maxAge = 5, maxAgeUnit = TimeUnit.MINUTES)
     public Response getSession(
             @PathParam("eventId") String eventSlug,
-            @PathParam("sessionId") String sessionId
+            @PathParam("sessionId") String sessionId,
+            @HeaderParam("X-Forwarded-Proto") String forwardedProto
     ) {
         Optional<Session> sessionOptional = sessionRepository.getSession(eventSlug, new SessionId(sessionId));
+        URI contextRoot = resolveContextRoot(forwardedProto);
         return sessionOptional
                 .map(session -> SessionDetaljerDTOMapper
-                        .toSessionDetaljerDTO(session, pathResolver.getContextRoot(), devNullUriCreator))
+                        .toSessionDetaljerDTO(session, contextRoot, devNullUriCreator))
                 .map(x -> Response.ok().entity(x).build())
                 .orElse(Response.status(503).build());
 
     }
+
+    private URI resolveContextRoot(@HeaderParam("X-Forwarded-Proto") String forwardedProto) {
+        return UriBuilder.fromUri(pathResolver.getContextRoot())
+                .scheme(forwardedProto != null ? forwardedProto : uriInfo.getRequestUri().getScheme()).build();
+    }
+
 
 }
