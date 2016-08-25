@@ -49,9 +49,8 @@ public class SessionResource {
                     contextRoot,
                     devNullUriCreator))
             .map(x -> Response.ok().entity(x).build())
-            .orElse(Response.status(503).build());
+            .orElse(errorResponse("Event not found"));
     }
-
 
     @GET
     @Path("/{sessionId}")
@@ -67,9 +66,13 @@ public class SessionResource {
                 .map(session -> SessionDetaljerDTOMapper
                         .toSessionDetaljerDTO(session, contextRoot, devNullUriCreator))
                 .map(x -> Response.ok().entity(x).build())
-                .orElse(Response.status(503).build());
-
+                .orElse(errorResponse("Session not found"));
     }
+
+    private Response errorResponse(String errorMessage) {
+        return Response.status(404).type(MediaType.APPLICATION_JSON_TYPE).entity("{\"message\": \"" + errorMessage + "\"}").build();
+    }
+
 
     private URI resolveContextRoot(@HeaderParam("X-Forwarded-Proto") String forwardedProto) {
         return UriBuilder.fromUri(pathResolver.getContextRoot())
