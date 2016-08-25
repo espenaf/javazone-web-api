@@ -1,6 +1,9 @@
 package no.javazone.speaker;
 
 import no.javazone.sessions.Foredragsholder;
+import no.javazone.sessions.SessionRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -22,25 +25,30 @@ public class SpeakerImageCache {
     private static final String HTTP_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
     private final Map<String, SpeakerBilde> speakerImageCache = new ConcurrentHashMap<>();
     private final Client client;
+    private static final Logger logger = LoggerFactory.getLogger(SessionRepository.class);
 
     public SpeakerImageCache() {
         client = ClientBuilder.newClient();
     }
 
     public void add(Foredragsholder f, NestedTimer timer) {
-        Optional<URI> photoUri = f.getPhotoUri();
-        if (photoUri.isPresent()) {
-            Response response = timer.time("fetchImage", photoUri.get().toString(), () -> fetchImage(f));
+        try {
+            Optional<URI> photoUri = f.getPhotoUri();
+            if (photoUri.isPresent()) {
+                Response response = timer.time("fetchImage", photoUri.get().toString(), () -> fetchImage(f));
 
-            if (response.getStatus() != Response.Status.NOT_MODIFIED.getStatusCode()) {
-                byte[] imageBytes = response.readEntity(byte[].class);
+                if (response.getStatus() != Response.Status.NOT_MODIFIED.getStatusCode()) {
+                    byte[] imageBytes = response.readEntity(byte[].class);
 
-                System.out.println("speakerid=" + f.getSpeakerId() + " bytes=" + imageBytes.length + " photoUri=" + photoUri.get());
+                    System.out.println("speakerid=" + f.getSpeakerId() + " bytes=" + imageBytes.length + " photoUri=" + photoUri.get());
 
-                SpeakerBilde speakerBilde = timer.time("convertImage", photoUri.get().toString(), () -> new SpeakerBilde(imageBytes, response.getLastModified()));
+                    SpeakerBilde speakerBilde = timer.time("convertImage", photoUri.get().toString(), () -> new SpeakerBilde(imageBytes, response.getLastModified()));
 
-                speakerImageCache.put(f.getSpeakerId(), speakerBilde);
+                    speakerImageCache.put(f.getSpeakerId(), speakerBilde);
+                }
             }
+        } catch (RuntimeException e) {
+            logger.warn("Failed to cache speaker image", e);
         }
     }
 
