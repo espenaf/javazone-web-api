@@ -26,12 +26,12 @@ public class BildeSkalerer {
 		return Scalr.resize(original, Method.ULTRA_QUALITY, mode, maksBredde, maksHoyde);
 	}
 
-	static BufferedImage byteArrayTilBufferedImage(final byte[] bildeData) {
+	private static BufferedImage byteArrayTilBufferedImage(final byte[] bildeData) {
 		try {
 			InputStream in = new ByteArrayInputStream(bildeData);
 			BufferedImage bufferedImage = ImageIO.read(in);
 			if (bufferedImage == null) {
-				throw new RuntimeException();
+				throw new RuntimeException("Could not read image");
 			}
 			return bufferedImage;
 		} catch (IOException e) {
@@ -39,7 +39,7 @@ public class BildeSkalerer {
 		}
 	}
 
-	static byte[] bufferedImageTilByteArray(final BufferedImage bufferedImage) {
+	private static byte[] bufferedImageTilByteArray(final BufferedImage bufferedImage) {
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ImageIO.write(bufferedImage, "png", baos);
