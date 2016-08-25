@@ -48,7 +48,7 @@ public class SpeakerImageCache {
                 }
             }
         } catch (RuntimeException e) {
-            logger.warn("Failed to cache speaker image", e);
+            logger.warn("Failed to cache speaker image. speakerid=" + f.getSpeakerId(), e);
         }
     }
 
