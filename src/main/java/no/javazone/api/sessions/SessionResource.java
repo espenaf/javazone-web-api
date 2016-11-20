@@ -44,7 +44,7 @@ public class SessionResource {
             .map(x -> SessionDTOMapper.toSessionDTOs(
                     x, pathResolver.path(uriInfo), pathResolver.getContextRoot()))
             .map(x -> Response.ok().entity(x).build())
-            .orElse(Response.status(503).build());
+                .orElseGet(() -> Response.status(404).build());
     }
 
     @GET
@@ -60,7 +60,7 @@ public class SessionResource {
                 .map(session -> SessionDetaljerDTOMapper
                         .toSessionDetaljerDTO(session, pathResolver.getContextRoot()))
                 .map(x -> Response.ok().entity(x).build())
-                .orElse(Response.status(503).build());
+                .orElseGet(() -> Response.status(404).build());
 
     }
 

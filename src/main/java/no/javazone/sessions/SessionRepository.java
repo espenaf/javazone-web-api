@@ -40,8 +40,7 @@ public class SessionRepository {
             eventCache.put(event.getSlug(), event);
         });
 
-        events.parallelStream()
-                .flatMap(e -> e.getSessions().stream()
+        events.parallelStream().flatMap(e -> e.getSessions().stream()
                         .flatMap(s -> s.getForedragsholdere().stream()
                                 .map(f -> f)))
                 .forEach(speakerCache::add);
