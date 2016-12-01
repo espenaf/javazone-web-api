@@ -1,13 +1,11 @@
 package no.javazone.sessions;
 
 import no.javazone.ems.EmsAdapter;
-import no.javazone.speaker.NestedTimer;
 import no.javazone.speaker.SpeakerImageCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class SessionRepository {
@@ -20,7 +18,7 @@ public class SessionRepository {
     public SessionRepository(EmsAdapter emsAdapter, SpeakerImageCache speakerCache) {
         this.emsAdapter = emsAdapter;
         this.speakerCache = speakerCache;
-        this.eventCache = new ConcurrentHashMap<>();
+        eventCache = new HashMap<>();
     }
 
     public Optional<Event> getSessions(String eventSlug) {
@@ -33,32 +31,20 @@ public class SessionRepository {
     }
 
     public void refresh() {
-        NestedTimer timer = new NestedTimer();
-        try {
-            LOG.info("Caching starta");
+        LOG.info("Caching starta");
 
-            List<Event> events = emsAdapter.getEvents(timer)
-                    .collect(Collectors.toList());
+        List<Event> events = emsAdapter.getEvents().collect(Collectors.toList());
 
-            events.forEach(event -> {
-                LOG.info("Cached " + event.getSlug());
-                eventCache.put(event.getSlug(), event);
-            });
+        events.forEach(event -> {
+            LOG.info("Cached " + event.getSlug());
+            eventCache.put(event.getSlug(), event);
+        });
 
-            events.parallelStream()
-                    .flatMap(e -> e.getSessions().stream()
-                            .flatMap(s -> s.getForedragsholdere().stream()
-                                    .map(f -> f)))
-                    .forEach(f -> speakerCache.add(f, timer));
+        events.parallelStream().flatMap(e -> e.getSessions().stream()
+                        .flatMap(s -> s.getForedragsholdere().stream()
+                                .map(f -> f)))
+                .forEach(speakerCache::add);
 
-            timer.printAggregate();
-
-            LOG.info("Caching ferdig");
-        } catch (Exception e) {
-            LOG.error("Exception under lasting av cache", e);
-        } catch (Throwable e) {
-            LOG.error("Throwable under lasting av cache", e);
-            throw e; // Rethrowing cancels the scheduler.
-        }
+        LOG.info("Caching ferdig");
     }
 }
